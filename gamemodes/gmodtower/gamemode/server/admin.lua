@@ -1,12 +1,12 @@
-
 util.AddNetworkString("JoinFriendCheck")
+
 GTowerAdmins = {
 }
 
 GTowerVIPS = {
 }
 
-// this is used for multiserver bypassing now, for testing gamemodes
+-- this is used for multiserver bypassing now, for testing gamemodes
 GTowerAdminPrivileged = {
 }
 
@@ -16,16 +16,12 @@ GTowerSecretAdmin = {
 GtowerAdmin = {}
 
 function IsAdmin(steamid)
-
 	return (GTowerAdmins and table.HasValue(GTowerAdmins, steamid))
 		or (GTowerAdminPrivileged and table.HasValue(GTowerAdminPrivileged, steamid))
 			or (GTowerSecretAdmin and table.HasValue(GTowerSecretAdmin, steamid))
-
-
 end
 
 concommand.Add("gmt_create",function(ply,cmd,args,str)
-
 	if !ply:IsAdmin() then return end
 
 	if !util.IsValidModel(args[1]) then
@@ -49,7 +45,6 @@ concommand.Add( "gt_act", function(ply, command, args)
 		end
 		return
 	end
-
 
     if #args < 1 then
 		if GTowerHackers then
@@ -162,19 +157,6 @@ concommand.Add( "gt_act", function(ply, command, args)
 
     elseif args[1] == "slap" && !hook.Call("DisableAdminCommand", GAMEMODE, args[1]) then
 
-       /* local TargetLife = TargetPly:Health() - tonumber(args[3] or 5)
-
-        if TargetLife <= 0 then
-
-            TargetPly:Kill()
-
-        else
-
-            TargetPly:SetHealth( TargetLife )
-            TargetPly:SetVelocity( VectorRand() * 2048 )
-
-        end */
-
 		TargetPly:TakeDamage( tonumber(args[3] or 5), ply, ply )
 
 		if TargetPly:Alive() then
@@ -220,8 +202,7 @@ hook.Add("PlayerDisconnected","LeaveMessage",function(ply)
 end)
 
 hook.Add("PlayerInitialSpawn", "GTowerCheckAdmin", function(ply)
-
-	for k,v in pairs(player.GetAll()) do
+	for k, v in pairs(player.GetAll()) do
 		if v == ply then continue end
 		local SanitizedName = SafeChatName(ply:Name())
 		v:SendLua([[GTowerChat.Chat:AddText("]]..SanitizedName..[[ is now in the tower.", Color(65, 115, 200, 255))]])
@@ -249,27 +230,21 @@ hook.Add("PlayerInitialSpawn", "GTowerCheckAdmin", function(ply)
 	local apikey = "FA416F9756E30676884A145BD9A9158B"
     local steamid = ply:SteamID64()
 
-	--print('steamid')
-	--print(steamid)
-
-        http.Fetch( "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key="..apikey.."&steamid="..steamid.."&format=json",
-        function(body)
-			print("GOT RESPONSE")
-
-            ply.glist = util.JSONToTable(body)
-			
-			--PrintTable(ply.glist)
-			
+	http.Fetch( "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key="..apikey.."&steamid="..steamid.."&format=json",
+	function(body)
+		ply.glist = util.JSONToTable(body)
+		if ply.glist.response.games then
 			for k,v in pairs(ply.glist.response.games) do
 				if v.appid == 394690 then
 					ply:SetNWBool("VIP",true)
 				end
 			end
-        end,
-        function(error)
-			ErrorNoHalt(error)
-        end
-        )
+		end
+	end,
+	function(error)
+		ErrorNoHalt(error)
+	end
+	)
 
 end )
 
@@ -285,43 +260,28 @@ function GetAdminRP()
 
 end
 
-// Increasing security, maybe someday it will be safe to bring these back
+-- Increasing security, maybe someday it will be safe to bring these back
 
 concommand.Add("gmt_runlua", function( ply, cmd, args )
-
 	if ply:IsAdmin() then
-
 		local Lua = table.concat( args, " ")
-
 		RunString("function GmtRunLua() " .. Lua .. " end ")
-
 		local B, retrn = SafeCall( GmtRunLua )
-
-		--ply:Msg2( tostring(retrn) )
-
 	end
 
 end )
 
 
 concommand.Add("gmt_svrunlua", function( ply, cmd, args )
-
 	if ply:IsAdmin() then
-
 		local Lua = table.concat( args, " ")
-
 		RunString("function GmtRunLua() " .. Lua .. " end ")
-
 		local B, retrn = SafeCall( GmtRunLua )
-
 		if type( retrn ) == "table" then
 			retrn = table.ToNiceString( retrn )
 		end
-
 		ply:Msg2( tostring(retrn) )
-
 	end
-
 end )
 
 concommand.Add("gmt_sendlua", function( ply, cmd, args )
