@@ -1,0 +1,30 @@
+
+--[[AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("cl_item.lua")
+AddCSLuaFile("cl_players.lua")
+AddCSLuaFile("cl_settings.lua")
+AddCSLuaFile("cl_rules.lua")
+AddCSLuaFile("dermamarkup.lua")]]--
+
+--[[AddCSLuaFile( "cl_init.lua" )
+AddCSLuaFile( "cl_init_customize.lua" )
+AddCSLuaFile( "cl_tabbase.lua" )
+AddCSLuaFile( "cl_tabbase_inner.lua" )
+AddCSLuaFile( "cl_scoreboard.lua" )
+AddCSLuaFile( "cl_awards.lua" )
+AddCSLuaFile( "cl_appearance.lua" )
+AddCSLuaFile( "cl_news.lua" )
+AddCSLuaFile( "cl_about.lua" )
+AddCSLuaFile( "cl_payouts.lua" )]]--
+
+AddCSLuaFile( "cl_init.lua" )
+AddCSLuaFile( "cl_init_customize.lua" )
+AddCSLuaFile( "cl_tabbase.lua" )
+AddCSLuaFile( "cl_tabbase_inner.lua" )
+AddCSLuaFile( "cl_scoreboard.lua" )
+AddCSLuaFile( "cl_awards.lua" )
+AddCSLuaFile( "cl_settings.lua" )
+AddCSLuaFile( "cl_appearance.lua" )
+AddCSLuaFile( "cl_news.lua" )
+AddCSLuaFile( "cl_about.lua" )
+AddCSLuaFile( "cl_payouts.lua" )

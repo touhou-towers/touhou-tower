@@ -1,0 +1,8 @@
+AddCSLuaFile "common.lua"
+AddCSLuaFile "sidebar.lua"
+AddCSLuaFile "sidebar_tabs.lua"
+AddCSLuaFile "volume_control.lua"
+AddCSLuaFile "playback.lua"
+AddCSLuaFile "queue.lua"
+AddCSLuaFile "horizontal_list.lua"
+AddCSLuaFile "icons.lua"

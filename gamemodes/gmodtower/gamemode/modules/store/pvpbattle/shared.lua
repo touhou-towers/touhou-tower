@@ -1,0 +1,2 @@
+
+PvpBattle = PvpBattle or {}
