@@ -112,4 +112,5 @@ function PresentTime()
 	end
 end
 
-hook.Add( "InitPostEntity", "StartSpawnerShit", PresentTime )
+-- disable presents i think?
+-- hook.Add( "InitPostEntity", "StartSpawnerShit", PresentTime )
