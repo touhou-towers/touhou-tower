@@ -4,10 +4,9 @@ GM.Name     = "GMod Tower: Ballrace"
 GM.Author   = "GMT Crew~"
 GM.Website  = "http://www.gmtower.org/"
 
---DeriveGamemode("base")
-
 DeriveGamemode( "gmodtower" )
 
+-- nice spelling on achievement
 TowerModules.LoadModules( {
 	"achivement",
 	"commands",
@@ -16,26 +15,39 @@ TowerModules.LoadModules( {
 	"scoreboard3",
 	"weaponfix",
 	"payout",
-	"music",
-	//"jetpack",
+	"music"
 } )
 
-
-GM.Lives = 2
+GM.Lives = 3
 GM.Tries = 2
-
-if game.GetMap() == "gmt_ballracer_midori" or game.GetMap() == "gmt_ballracer_midorib5" then
-	GM.DefaultLevelTime = 120
-	GM.Lives = 3
-elseif game.GetMap() == "gmt_ballracer_memories04" then
-	GM.DefaultLevelTime = 70
-	GM.Lives = 3
-elseif game.GetMap() == "gmt_ballracer_tranquil" or game.GetMap() == "gmt_ballracer_miracle" then
-	GM.DefaultLevelTime = 70
-else
 GM.DefaultLevelTime = 60
-end
 GM.IntermissionTime = 35
+
+LivesTriesOverride = {
+	gmt_ballracer_midori = {
+		Time = 120,
+		Lives = 4
+	},
+	gmt_ballracer_memories04 = {
+		Time = 70,
+		Lives = 4
+	},
+	gmt_ballracer_tranquil = {
+		Time = 70
+	}
+}
+LivesTriesOverride.gmt_vallracer_midorib5 = LivesTriesOverride.gmt_ballracer_midori
+LivesTriesOverride.gmt_ballracer_miracle = LivesTriesOverride.gmt_ballracer_tranquil
+
+-- i dont know why all of these look like global variables honestly
+-- but ill make a closure to be safe
+(function()
+	local map = game.GetMap()
+	if LivesTriesOverride[map] then
+		GM.DefaultLevelTime = LivesTriesOverride[map] or GM.DefaultLevelTime
+		GM.Lives = LivesTriesOverride[map].Lives or GM.Lives
+	end
+end)()
 
 default_pm = 'models/player/kleiner.mdl'
 
@@ -54,25 +66,25 @@ end
 SetTime(GM.DefaultLevelTime)
 
 Levels = {
-"gmt_ballracer_grassworld01",
-"gmt_ballracer_iceworld03",
-"gmt_ballracer_khromidro02",
-"gmt_ballracer_memories04",
-"gmt_ballracer_metalworld",
-"gmt_ballracer_midorib5",
-"gmt_ballracer_neonlights",
-"gmt_ballracer_nightball",
-"gmt_ballracer_paradise03",
-"gmt_ballracer_prism03",
-"gmt_ballracer_sandworld02",
-"gmt_ballracer_skyworld01",
-"gmt_ballracer_spaceworld",
-"gmt_ballracer_summit",
-"gmt_ballracer_waterworld02",
-"gmt_ballracer_facile",
-"gmt_ballracer_flyinhigh01",
-"gmt_ballracer_tranquil",
-"gmt_ballracer_rainbowworld"
+	"gmt_ballracer_grassworld01",
+	"gmt_ballracer_iceworld03",
+	"gmt_ballracer_khromidro02",
+	"gmt_ballracer_memories04",
+	"gmt_ballracer_metalworld",
+	"gmt_ballracer_midorib5",
+	"gmt_ballracer_neonlights",
+	"gmt_ballracer_nightball",
+	"gmt_ballracer_paradise03",
+	"gmt_ballracer_prism03",
+	"gmt_ballracer_sandworld02",
+	"gmt_ballracer_skyworld01",
+	"gmt_ballracer_spaceworld",
+	"gmt_ballracer_summit",
+	"gmt_ballracer_waterworld02",
+	"gmt_ballracer_facile",
+	"gmt_ballracer_flyinhigh01",
+	"gmt_ballracer_tranquil",
+	"gmt_ballracer_rainbowworld"
 }
 
 LevelMusic = {
@@ -117,8 +129,6 @@ STATUS_SPAWNING = 4
 TEAM_PLAYERS = 1
 TEAM_DEAD = 2
 TEAM_COMPLETED = 3
-
---GTowerModules:RequireModule( "scoreboard" )
 
 function SetState(state)
 	SetGlobalInt("GamemodeState", state);

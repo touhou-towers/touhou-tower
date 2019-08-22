@@ -41,7 +41,7 @@ end )
 
 function GetNextSpawn()
 
-	// Check if it's lvl 1.
+	-- Check if it's lvl 1.
 	for k,v in pairs(ents.FindByClass("info_target")) do
 		if LateSpawn == nil then
 			if (v:GetName() == "lvl2_start" || v:GetName() == "lv2_start") then
@@ -139,7 +139,7 @@ function GM:UpdateStatus(disc)
 
 			timer.Simple( 0.5, function() level = level + 1 end )
 			tries = 0
-			// Fokin' network delay
+			-- Fokin' network delay
 			timer.Simple( 0.2, function() GAMEMODE:GiveMoney() end )
 
 			if NextMap then

@@ -1,101 +1,89 @@
+-- name is the title
+-- desc is the description
+-- GMC is the amount paid
+-- diff is a identifier so you don't get the same reward?
+-- or difficulty? or position in the HUD
 
------------------------------------------------------
-payout.Register( "ThanksForPlaying", {
-	Name = "Thanks For Playing",
-	Desc = "For participating in the game!",
-	GMC = 25,
-} )
-
-payout.Register( "Completed", {
-	Name = "Completed Level",
-	Desc = "For completing the level.",
-	GMC = 25,
-	Diff = 1,
-} )
+Payouts = {
+	-- thanksforplaying is automatically awarded i think
+	ThanksForPlaying = {
+		Name = "Thanks for Playing",
+		Desc = "For participating!",
+		GMC = 25
+	},
+	Completed = {
+		Name = "Completed Level",
+		Desc = "For reaching the end!",
+		GMC = 50,
+		Diff = 1
+	},
+	NoDie = {
+		Name = "Didn't Die",
+		Desc = "You didn't die!",
+		GMC = 25,
+		Diff = 1,
+	},
+	Button = {
+		Name = "Team Player",
+		Desc = "You pressed the button!",
+		Diff = 4,
+		GMC = 75
+	},
+	Collected = {
+		Name = "Collected Bananas",
+		Desc = "Banana bonus! (3 GMC ea)",
+		Diff = 4,
+		GMC = 0
+	}
+}
 
-payout.Register( "NoDie", {
-	Name = "Didn't Die",
-	Desc = "You didn't lose any lives.",
-	GMC = 25,
-	Diff = 1,
-} )
-
-payout.Register( "Rank1", {
-	Name = "1st Place",
-	Desc = "Congratulations!",
-	GMC = 150,
-	Diff = 3,
-} )
-
-payout.Register( "Rank2", {
-	Name = "2nd Place",
-	Desc = "Aw, so close!",
-	GMC = 100,
-	Diff = 3,
-} )
-
-payout.Register( "Rank3", {
-	Name = "3rd Place",
-	Desc = "",
-	GMC = 50,
-	Diff = 3,
-} )
+-- ranks can be calculated automatically
+local descriptions = {"Amazing!", "Close one!", "Nice job!", "Pretty good.", "Average."}
+for place = 1, #descriptions do
+	Payouts["Rank" .. place] = {
+		Name = "You're #" .. place,
+		Desc = descriptions[place],
+		Diff = 3,
+		GMC = 50 * place
+	}
+end
 
-payout.Register( "Button", {
-	Name = "Team Player",
-	Desc = "For pressing a button.",
-	Diff = 4,
-	GMC = 50,
-} )
+-- actually register the payouts
+for k, v in pairs(Payouts) do
+	payout.Register(k, v)
+end
 
-payout.Register( "Collected", {
-	Name = "Collected Bananas",
-	Desc = "Bonus for collecting bananas (5 GMC each).",
-	Diff = 4,
-	GMC = 0,
-} )
-
-function GM:GiveMoney()
-
-	if CLIENT then return end
-
-	--local PlayerTable = player.sqlGetAll()
+function GM:GiveMoney()
+	if CLIENT then return end
 
-		for _, ply in pairs( player.GetAll() ) do
+	for _, ply in pairs(player.GetAll()) do
+		if ply.AFK then continue end
 
-			if ply.AFK then continue end
+		payout.Clear(ply)
+		local placement = ply:GetNWInt("Placement")
 
-			payout.Clear( ply )
+		if ply:Team() == TEAM_COMPLETED then
+			payout.Give(ply, "Completed")
+		end
 
+		if !ply:GetNWBool("Died") then
+			payout.Give(ply, "NoDie")
+		end
 
-			local placement = ply:GetNWInt("Placement")
+		if ply:GetNWBool("PressedButton") then
+			payout.Give(ply, "Button")
+		end
 
-			if ply:Team() == TEAM_COMPLETED then
-				payout.Give( ply, "Completed" )
-			end
+		-- rank
+		if  Payouts["Rank" .. placement] then
+			payout.Give(ply, "Rank" .. placement)
+		end
 
-			if !ply:GetNWBool("Died") then
-				payout.Give( ply, "NoDie" )
-			end
+		-- frags here are bananas
+		if ply:Frags() > 0 then
+			payout.Give( ply, "Collected", ply:Frags() * 3 )
+		end
 
-			if ply:GetNWBool("PressedButton") then
-				payout.Give( ply, "Button" )
-			end
-
-			if placement == 1 then
-				payout.Give( ply, "Rank1" )
-			elseif placement == 2 then
-				payout.Give( ply, "Rank2" )
-			elseif placement == 3 then
-				payout.Give( ply, "Rank3" )
-			end
-
-			if ply:Frags() > 0 then
-      	payout.Give( ply, "Collected", ply:Frags() * 5 )
-			end
-
-			payout.Payout( ply )
-
-		end
-
+		payout.Payout( ply )
+	end
 end

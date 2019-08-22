@@ -38,11 +38,11 @@ function GM:OverrideHatEntity(ply)
 	end
 end
 
-// Speed HUD
+-- Speed HUD
 local lastSpeed = 0
 local antlionRot = 0
 
-// Banana HUD
+-- Banana HUD
 local bananas = 0
 local lastBanana = 0
 local bananaTime = 0
@@ -50,7 +50,7 @@ local bananaRot = 0
 local bananaSize = 0
 local curRot = 0
 
-// Timer HUD
+-- Timer HUD
 local timerSize = 0
 
 function GM:HUDPaint()

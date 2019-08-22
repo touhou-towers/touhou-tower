@@ -21,8 +21,8 @@ local function PanelGuiThink()
 		return
 	end
 	
-	//If going from the left to the middle screen
-	//Takes one second
+	-- If going from the left to the middle screen
+	-- Takes one second
 	if TimeLeft > 8 - 1 then
 		
 		local Perc = 8 - TimeLeft

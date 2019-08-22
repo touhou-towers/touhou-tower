@@ -1,13 +1,13 @@
-
 function GM:EndServer()
-	//I guess it it good bye
+	-- I guess it is good bye
 	GTowerServers:EmptyServer()
 
 	--timer.Simple( 2.5, ChangeLevel, GTowerServers:GetRandomMap() or GAMEMODE:RandomMap( "gmt_ballracer" ) )
-	timer.Simple(2.5,function()
+	timer.Simple(2.5, function()
 
 		local map = (GTowerServers:GetRandomMap() or GAMEMODE:RandomMap( "gmt_ballracer" ))
-
+		
+		-- not sure where this event name comes from
 		hook.Call("LastChanceMapChange", GAMEMODE, map)
 		RunConsoleCommand("changelevel", map)
 

@@ -32,6 +32,7 @@ function GM:Initialize()
 
 	SetGlobalInt( "Attempts", 0 )
 	
+	-- TODO: update this
 	RunConsoleCommand( "sv_loadingurl", "http://gmodtower.org/loading/?mapname=%m&steamid=%s" )
 end
 
@@ -120,7 +121,7 @@ end)
 
 hook.Add( "AFKNotFull", "GamemodeNotFull", GamemodeNotFull )
 
-// no anti-tranquility on gamemodes
+-- no anti-tranquility on gamemodes
 hook.Add( "AntiTranqEnable", "GamemodeAntiTranq", function() return false end )
 
 function GM:PlayerDeath( victim, inflictor, attacker )
@@ -137,7 +138,6 @@ timer.Create( "AchiBallerRoll", 60.0, 0, function()
 			v:AddAchivement( ACHIVEMENTS.BRBALLERROLL, 1 )
 		end
 	end
-
 end )
 
 util.AddNetworkString( "roundmessage" )

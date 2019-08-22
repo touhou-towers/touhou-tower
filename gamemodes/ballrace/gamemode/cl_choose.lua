@@ -1,3 +1,6 @@
+--[[
+	this file is the ball picker for ball race
+]]
 surface.CreateFont( "GTowerHUDMainSmall", { font = Oswald, size = 14, weight = 400 } )
 
 pick_ball = CreateClientConVar( "selected_ball", "1", true, false )
@@ -5,6 +8,7 @@ pick_ball = CreateClientConVar( "selected_ball", "1", true, false )
 BallRacerChooser = {}
 BallRacerChooser.GUI = nil
 
+-- none of these models actually exist since the files were taken down
 local EachHeight = 80
 local AllowCube = false
 local AllowIcosahedron = false
@@ -18,7 +22,6 @@ local AllowBallion = false
 local ChosenId = cookie.GetNumber( "GMTChosenBall", 1 )
 
 function BallRacerChooser:Open()
-
 	self:Close()
 
 	self.GUI = vgui.Create("DPanel")
@@ -85,16 +88,13 @@ function BallRacerChooser:Open()
 		ScrW() / 2 - self.GUI:GetWide() / 2,
 		ScrH() - self.GUI:GetTall()
 	)
-
 end
 
 function BallRacerChooser:Close()
-
 	if ValidPanel( self.GUI ) then
 		self.GUI:Remove()
 		self.GUI = nil
 	end
-
 end
 
 function BallRacerChooser:ChooseBall( name )
@@ -113,7 +113,6 @@ local function DoClickSetBall( panel )
 end
 
 local function DrawLayout( panel, entity )
-
 	if panel.Hovered then
 		draw.RoundedBox( 8, 0, 0, panel:GetWide(), panel:GetTall(), Color(10, 10, 10, 240 ) )
 		panel.Title:SetColor( Color( 100, 100, 255 ) )
@@ -128,17 +127,17 @@ local function DrawLayout( panel, entity )
 	end
 
 	entity:SetAngles( Angle( 0, RealTime()*60,  0) )
-
 end
 
 function BallRacerChooser:GetPanel( model, name, friendlyname, camera )
-
 	local Panel = vgui.Create( "DModelPanel", self.GUI )
 
 	Panel:SetModel( model )
 	Panel:SetCamPos( camera or Vector( 60, 60, 60 ) )
 	Panel:SetLookAt( Vector(0,0,0) )
-	//Panel:SetMouseInputEnabled( false )
+	-- this was commented out but im not sure why
+	-- to disable the mouse? well whatever
+	-- Panel:SetMouseInputEnabled( false )
 	Panel:SetSize( EachHeight, EachHeight )
 
 	Panel.NameId = name
@@ -156,6 +155,7 @@ function BallRacerChooser:GetPanel( model, name, friendlyname, camera )
 	return Panel
 end
 
+ -- if the menu button is down
 local IsButtonDown
 
 function BallMenu()
@@ -165,12 +165,17 @@ function BallMenu()
 		BallRacerChooser:Close()
 	end
 end
+
+-- when the menu is opened...
 hook.Add("GtowerShowMenus", "bcontextmenuopen", function()
 	IsButtonDown = true
 	RunConsoleCommand("gmt_requestballupdate")
 	BallMenu()
 	gui.EnableScreenClicker(true)
 end)
+
+-- when the menu is closed...
+-- this makes me question if IsButtonDown is even needed
 hook.Add("GtowerHideMenus", "bcontextmenuclose", function()
 	IsButtonDown = false
 	BallMenu()
@@ -178,11 +183,8 @@ hook.Add("GtowerHideMenus", "bcontextmenuclose", function()
 end)
 
 net.Receive( "GtBall", function(len)
-
 	local Id = net.ReadInt( 2 )
-
 	if Id == 0 then
-
 		AllowCube = net.ReadBool()
 		AllowIcosahedron = net.ReadBool()
 		AllowCatBall = net.ReadBool()
@@ -190,12 +192,8 @@ net.Receive( "GtBall", function(len)
 		AllowGeo = net.ReadBool()
 		AllowSoccerBall = net.ReadBool()
 		AllowSpiked = net.ReadBool()
-
 	elseif Id == 1 then
-
 		ChosenId = net.ReadChar()
 		cookie.Set("GMTChosenBall", ChosenId )
-
 	end
-
 end )

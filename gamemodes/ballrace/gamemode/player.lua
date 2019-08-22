@@ -11,6 +11,7 @@ function GM:PlayerInitialSpawn(ply)
 	net.Start("pick_ball")
 	net.Send(ply)
 
+	-- if waiting and number of players is 1
 	if GetState() == STATUS_WAITING && #player.GetAll() == 1 then
 		game.CleanUpMap()
 		SetTime(CurTime() + GAMEMODE.IntermissionTime)
@@ -49,7 +50,7 @@ end
 
 function GM:PlayerDeathSound( ply )
 	local effectdata = EffectData()
-		effectdata:SetOrigin( ply:GetPos() )
+	effectdata:SetOrigin( ply:GetPos() )
 	util.Effect( "confetti", effectdata )
 
 	ply:EmitSound("weapons/ar2/npc_ar2_altfire.wav", 75, math.random(160,180), 1, CHAN_AUTO )
