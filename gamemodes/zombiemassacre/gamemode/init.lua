@@ -33,11 +33,9 @@ include( "shared.lua" )
 
 util.AddNetworkString( "gmt_heli_fly" )
 
-GM.NPCLimit = 90
+GM.NPCLimit = 120
 
 CreateConVar("gmt_srvid", 8 )
-
-//===============================================================
 
 function GM:Intialize()
 	RegisterNWGlobal()
@@ -102,7 +100,7 @@ hook.Add( "PlayerInitialSpawn", "ResetOnEmptyServer", function( ply )
 
 		PlayerNWSetup(ply)
 
-		//This is a one time deal, or it can be abused to make a infinite game by reconnecting
+		-- This is a one time deal, or it can be abused to make a infinite game by reconnecting
 		hook.Remove("PlayerInitialSpawn", "ResetOnEmptyServer")
 
 		GAMEMODE:SetState( STATE_WAITING )
@@ -118,7 +116,7 @@ end )
 
 hook.Add( "PlayerInitialSpawn", "zm_defaultclass", function( ply )
 
-			// If the players joins outside of the upgrading state, make them survivor.
+			--  If the players joins outside of the upgrading state, make them survivor.
 			if GAMEMODE:GetState() == STATE_UPGRADING then return end
 
 			local getclass = classmanager.Get( "survivor" )
@@ -138,7 +136,7 @@ hook.Add( "PlayerSpawn", "Weapon_Give", function( ply )
 		ply:Give("weapon_zm_handgun")
 	end
 
-	// Set player model
+	--  Set player model
 	hook.Call( "PlayerSetModel", GAMEMODE, ply )
 
 	ply:SetNoCollideWithTeammates( true )
@@ -154,8 +152,8 @@ function GM:InitPostEntity()
 
 	self.PlayerSpawns = ents.FindByClass( "info_player_start" )
 
-	/*//This camera is created for a number of reasons.
-	//I will be using this to do cinematics later.
+	-- This camera is created for a number of reasons.
+	-- I will be using this to do cinematics later.
 	local cam = ents.Create( "prop_physics" )
 
 	cam:SetModel( "models/player.mdl" )
@@ -168,9 +166,9 @@ function GM:InitPostEntity()
 	cam:SetMoveType( MOVETYPE_NONE )
 	cam:SetCollisionGroup( COLLISION_GROUP_DEBRIS_TRIGGER )
 
-	self.Camera = cam*/
+	self.Camera = cam
 
-	// setup our drop system
+	--  setup our drop system
 	DropManager.Initialize()
 
 end
@@ -215,7 +213,7 @@ function GM:EntityTakeDamage( target, dmginfo )
 			umsg.Short(target:EntIndex())
 		umsg.End()
 
-		self.LastDamageNote = CurTime() + .15 //let's not have so many damage notes going on.
+		self.LastDamageNote = CurTime() + .15 -- let's not have so many damage notes going on.
 	end
 
 	if ply:GetNWInt( "Combo" ) > 4 then
@@ -230,7 +228,8 @@ GM.RandoInfected = {
 	--"zm_npc_spider",
 }
 
-//This is a temp function for testing ONLY.
+-- This is a temp function for testing ONLY.
+-- doesnt seem to be testing only
 function GM:SpawnZombies()
 
 	self.ZombieSpawns = ents.FindByClass( "info_zombie_spawn" )
@@ -245,26 +244,28 @@ function GM:SpawnZombies()
 	end
 
 	if curzomb < self.NPCLimit then
+		local zmSpawns = math.min(player.GetCount() + GetGlobalInt('Round'), self.NPCLimit - curzomb)
+		for _ = 1, zmSpawns do
+			local zom = ents.Create( entclass )
+			zom:SetCustomCollisionCheck( true )
+			zom:SetPos( self.ZombieSpawns[math.random( 1, #self.ZombieSpawns )]:GetPos() + Vector(0,0,25) )
+			zom:SetAngles( Angle( 0, 0, 0 ) )
+			zom:Spawn()
 
-		local zom = ents.Create( entclass )
-		zom:SetCustomCollisionCheck( true )
-		zom:SetPos( self.ZombieSpawns[math.random( 1, #self.ZombieSpawns )]:GetPos() + Vector(0,0,25) )
-		zom:SetAngles( Angle( 0, 0, 0 ) )
-		zom:Spawn()
-
-		local eff = EffectData()
-		eff:SetEntity( zom )
-		eff:SetOrigin( zom:GetPos() )
-		eff:SetNormal( zom:GetUp() )
-		util.Effect( "zombspawn", eff, true, true )
-
+			local eff = EffectData()
+			eff:SetEntity( zom )
+			eff:SetOrigin( zom:GetPos() )
+			eff:SetNormal( zom:GetUp() )
+			util.Effect( "zombspawn", eff, true, true )
+		end
 	end
 
-	local round = GetGlobalInt('Round')
-
-	RoundDev = round / 5
-
-	timer.Simple( math.Rand( ( 2 - RoundDev ) - ( player.GetCount() / 6 ), ( 3 - RoundDev ) - ( player.GetCount() / 5 ) ),function() self:SpawnZombies() end )
+	-- not including player count
+	-- original goes between lower bounds of (2, 1) and upper of (3, 2)
+	-- delay is in seconds so let's just put it at 1 and spawn zombies depending on the players
+	-- theoretically I should be able to just put self:SpawnZombies instead of the function?
+	-- well binding problems and such and i dont want to risk it for now
+	timer.Simple(1, function() self:SpawnZombies() end )
 
 end
 
@@ -353,9 +354,9 @@ hook.Add( "PlayerDisconnected", "NoPlayerCheck", function(ply)
 end)
 
 hook.Add("GTowerMsg","GamemodeMessage",function()
-	// Join panel communication
+	-- Join panel communication
 
-	// General states
+	-- General states
 	if player.GetCount() < 1 then
 		return "#nogame"
 	elseif GAMEMODE.BossRound then
@@ -364,7 +365,7 @@ hook.Add("GTowerMsg","GamemodeMessage",function()
 		return "#before"
 	end
 
-	// Complex states
+	-- Complex states
 	-- TIMELEFT |||| CURROUND / MAXROUNDS
 
 	return GAMEMODE:GetTimeLeft() .. "||||" .. GetGlobalInt("Round") .. "/" .. "5"
