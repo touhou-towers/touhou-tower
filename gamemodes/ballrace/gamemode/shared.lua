@@ -41,13 +41,12 @@ LivesTriesOverride.gmt_ballracer_miracle = LivesTriesOverride.gmt_ballracer_tran
 
 -- i dont know why all of these look like global variables honestly
 -- but ill make a closure to be safe
-(function()
-	local map = game.GetMap()
-	if LivesTriesOverride[map] then
-		GM.DefaultLevelTime = LivesTriesOverride[map] or GM.DefaultLevelTime
-		GM.Lives = LivesTriesOverride[map].Lives or GM.Lives
-	end
-end)()
+-- ok it complained about the closure
+local map = game.GetMap()
+if LivesTriesOverride[map] then
+	GM.DefaultLevelTime = LivesTriesOverride[map] or GM.DefaultLevelTime
+	GM.Lives = LivesTriesOverride[map].Lives or GM.Lives
+end
 
 default_pm = 'models/player/kleiner.mdl'
 

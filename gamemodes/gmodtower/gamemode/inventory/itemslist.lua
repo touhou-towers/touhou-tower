@@ -21,34 +21,57 @@ include( "itemslist/posters.lua" )
 include( "itemslist/food.lua" )
 include( "itemslist/bonemods.lua" )
 
-RegisterItem("wooddeskwow",{
-	Name = "Wooden Desk",
-	Description = "This desk is imported directly from the Swedish furniture store, Bullseye.",
-	Model = "models/splayn/rp/of/desk1.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 1,
-	StorePrice = 1300,
-	MoveSound = "furniture3",
+RegisterItem("wooddeskwow",{
+
+	Name = "Wooden Desk",
+
+	Description = "This desk is imported directly from the Swedish furniture store, Bullseye.",
+
+	Model = "models/splayn/rp/of/desk1.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 1,
+
+	StorePrice = 1300,
+
+	MoveSound = "furniture3",
+
 })
 
-RegisterItem( "gmt_texthat", {	Name = "Text Hat",
+RegisterItem( "gmt_texthat", {
+	Name = "Text Hat",
 	Description = "A customizable text hat. Wear your words.",
 	Model = "models/gmod_tower/fedorahat.mdl",
 	UniqueInventory = true,
-	UniqueEquippable = true,
+	UniqueEquippable = true,
+
 	DrawModel = true,
 	Equippable = true,
 	EquipType = "TextHat",
-	ClassName = "gmt_wearable_texthat",
-	CanEntCreate = false,	CanRemove = true,	DrawName = true,	Tradable = true,
-	StoreId = 8,	StorePrice = 30000,
-	RemoveOnDeath = true,	RemoveOnNoEntsLoc = true,
-	ExtraMenuItems = function ( item, menu )
+	ClassName = "gmt_wearable_texthat",
+
+	CanEntCreate = false,
+	CanRemove = true,
+	DrawName = true,
+	Tradable = true,
+
+	StoreId = 8,
+	StorePrice = 30000,
+
+	RemoveOnDeath = true,
+	RemoveOnNoEntsLoc = true,
+
+	ExtraMenuItems = function ( item, menu )
+
 		table.insert( menu, {
 			[ "Name" ] = "Set Height Offset",
-			[ "function" ] = function()
-				local curHeight = LocalPlayer():GetInfoNum( "gmt_hatheight", 0 ) or 0
+			[ "function" ] = function()
+
+				local curHeight = LocalPlayer():GetInfoNum( "gmt_hatheight", 0 ) or 0
+
 				Derma_SliderRequest(
 					"Hat Height",
 					"Please enter the height you wish the text to float above your head.",
@@ -56,11 +79,17 @@ RegisterItem( "gmt_texthat", {	Name = "Text Hat",
 					-50, 50,
 					0,
 					function ( val ) RunConsoleCommand( "gmt_hatheight", val ) end
-				)
+				)
+
 			end
-		} )
-		table.insert( menu, {			[ "Name" ] = "Set Text",			[ "function" ] = function()
-				local curText = LocalPlayer():GetInfo( "gmt_hattext" ) or ""
+		} )
+
+		table.insert( menu, {
+			[ "Name" ] = "Set Text",
+			[ "function" ] = function()
+
+				local curText = LocalPlayer():GetInfo( "gmt_hattext" ) or ""
+
 				Derma_StringRequest(
 					"Hat Text",
 					"Please enter the text you would like to float above your head.",
@@ -71,18 +100,31 @@ RegisterItem( "gmt_texthat", {	Name = "Text Hat",
 						end
 						RunConsoleCommand( "gmt_hattext", text ) 
 					end
-				)
+				)
+
 			end
-		} )
+		} )
+
 	end,
 
 	EquippableEntity = true,
-	OverrideOnlyEquippable = true,	CreateEquipEntity = function( self )
-		local hatEnt = ents.Create( "gmt_wearable_texthat" )
-		if IsValid( hatEnt ) then			hatEnt.IsActiveEquippable = true			hatEnt:SetPos( self.Ply:GetPos() )			hatEnt:SetOwner( self.Ply )			hatEnt:SetParent( self.Ply )			hatEnt.Owner = self.Ply
+	OverrideOnlyEquippable = true,
+	CreateEquipEntity = function( self )
+
+		local hatEnt = ents.Create( "gmt_wearable_texthat" )
+
+		if IsValid( hatEnt ) then
+			hatEnt.IsActiveEquippable = true
+			hatEnt:SetPos( self.Ply:GetPos() )
+			hatEnt:SetOwner( self.Ply )
+			hatEnt:SetParent( self.Ply )
+			hatEnt.Owner = self.Ply
+
 			hatEnt:Spawn()
-		end
-		return hatEnt
+		end
+
+		return hatEnt
+
 	end
 } )
 
@@ -446,34 +488,62 @@ RegisterItem("computer_monitor",{
 	StorePrice = 130,
 })
 
-RegisterItem("medchair",{
-	Name = "Modern Desk Chair",
-	Description = "A modern chair for your desk.",
-	Model = "models/gmod_tower/medchair.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 1,
-	StorePrice = 400,
-})
-
-RegisterItem("meddesk",{
-	Name = "Modern Desk",
-	Description = "A large modern desk.",
-	Model = "models/gmod_tower/meddesk.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 1,
-	StorePrice = 1000,
-})
-
-RegisterItem("meddeskcor",{
-	Name = "Fancy Desk Corner",
-	Description = "A large fancy desk corner.",
-	Model = "models/gmod_tower/meddeskcor.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 1,
-	StorePrice = 400,
+RegisterItem("medchair",{
+
+	Name = "Modern Desk Chair",
+
+	Description = "A modern chair for your desk.",
+
+	Model = "models/gmod_tower/medchair.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 1,
+
+	StorePrice = 400,
+
+})
+
+
+
+RegisterItem("meddesk",{
+
+	Name = "Modern Desk",
+
+	Description = "A large modern desk.",
+
+	Model = "models/gmod_tower/meddesk.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 1,
+
+	StorePrice = 1000,
+
+})
+
+
+
+RegisterItem("meddeskcor",{
+
+	Name = "Fancy Desk Corner",
+
+	Description = "A large fancy desk corner.",
+
+	Model = "models/gmod_tower/meddeskcor.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 1,
+
+	StorePrice = 400,
+
 })
 
 RegisterItem("couch",{
@@ -797,14 +867,22 @@ RegisterItem("pot01a",{
 	StoreId = 6,
 	StorePrice = 5,
 })
-RegisterItem("compositionnotebook",{
-	Name = "Notebook",
-	Description = "Well, maybe there's something useful written in it related to smoothies. Then again, maybe it's just amusing drawings.",
-	Model = "models/sunabouzu/notebook_elev.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 25,
-	StorePrice = 400,
+RegisterItem("compositionnotebook",{
+
+	Name = "Notebook",
+
+	Description = "Well, maybe there's something useful written in it related to smoothies. Then again, maybe it's just amusing drawings.",
+
+	Model = "models/sunabouzu/notebook_elev.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 25,
+
+	StorePrice = 400,
+
 })
 
 RegisterItem("lsaber",{
@@ -1044,27 +1122,47 @@ RegisterItem("1984",{
 	StoreId = 6,
 	StorePrice = 250,
 })
-RegisterItem("book3",{
-	Name = "Coverless Book",
-	Description = "Blue coverless book",
-	Model = "models/sunabouzu/book_single1.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 6,
-	StorePrice = 250,
-	ModelSkinId = 3,
-	MoveSound = "paper",
+RegisterItem("book3",{
+
+	Name = "Coverless Book",
+
+	Description = "Blue coverless book",
+
+	Model = "models/sunabouzu/book_single1.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 6,
+
+	StorePrice = 250,
+
+	ModelSkinId = 3,
+
+	MoveSound = "paper",
+
 })
-RegisterItem("book2",{
-	Name = "Coverless Book",
-	Description = "Red coverless book",
-	Model = "models/sunabouzu/book_single1.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 6,
-	StorePrice = 250,
-	ModelSkinId = 1,
-	MoveSound = "paper",
+RegisterItem("book2",{
+
+	Name = "Coverless Book",
+
+	Description = "Red coverless book",
+
+	Model = "models/sunabouzu/book_single1.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 6,
+
+	StorePrice = 250,
+
+	ModelSkinId = 1,
+
+	MoveSound = "paper",
+
 })
 RegisterItem("pilepaper",{
 	Name = "Pile Of Papers",
@@ -1308,14 +1406,22 @@ RegisterItem("comfbed",{
 	MoveSound = "cloth"
 })
 
-RegisterItem("filingcabinetwithbooze",{
-	Name = "Filing Cabinet",
-	Description = "These are the only things that ever need to be filed anyway.",
-	Model = "models/sunabouzu/noir_cabinet.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 1,
-	StorePrice = 1000,
+RegisterItem("filingcabinetwithbooze",{
+
+	Name = "Filing Cabinet",
+
+	Description = "These are the only things that ever need to be filed anyway.",
+
+	Model = "models/sunabouzu/noir_cabinet.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 1,
+
+	StorePrice = 1000,
+
 })
 
 RegisterItem("kitchtable",{
@@ -1677,14 +1783,22 @@ RegisterItem("plazaboothstore",{
 	StorePrice = 150,
 })
 
-RegisterItem("coffeetable",{
-	Name = "Modern Coffee Table",
-	Description = "A nice coffee table for your drinks.",
-	Model = "models/gmod_tower/coffeetable.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 1,
-	StorePrice = 800,
+RegisterItem("coffeetable",{
+
+	Name = "Modern Coffee Table",
+
+	Description = "A nice coffee table for your drinks.",
+
+	Model = "models/gmod_tower/coffeetable.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 1,
+
+	StorePrice = 800,
+
 })
 
 RegisterItem("pianostool",{
@@ -1696,16 +1810,26 @@ RegisterItem("pianostool",{
 	StoreId = 27,
 	StorePrice = 150,
 })
-RegisterItem("rave_ball",{
-	Name = "Rave Ball",
-	Description = "Get your rave on with this musical orb. Splashes colorful bursts, and unlike the disco ball, can give people seizures (use responsively).",
-	Model = "models/gmod_tower/discoball.mdl",
-	ClassName = "gmt_raveball",
-	UniqueInventory = true,
-	EnablePhyiscs = true,
-	DrawModel = true,
-	StoreId = 27,
-	StorePrice = 30000,
+RegisterItem("rave_ball",{
+
+	Name = "Rave Ball",
+
+	Description = "Get your rave on with this musical orb. Splashes colorful bursts, and unlike the disco ball, can give people seizures (use responsively).",
+
+	Model = "models/gmod_tower/discoball.mdl",
+
+	ClassName = "gmt_raveball",
+
+	UniqueInventory = true,
+
+	EnablePhyiscs = true,
+
+	DrawModel = true,
+
+	StoreId = 27,
+
+	StorePrice = 30000,
+
 })
 RegisterItem("autopiano",{
 	Name = "Piano",
@@ -1824,16 +1948,26 @@ RegisterItem("waterspigot",{
 	NewItem = false
 })
 
-RegisterItem("woodgametable",{
-	Name = "Wooden Table",
-	Description = "A wooden multipurpose table.",
-	Model = "models/gmod_tower/gametable.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 1,
-	StorePrice = 1000,
-	MoveSound = "furniture2",
-	DateAdded = 1399291083,
+RegisterItem("woodgametable",{
+
+	Name = "Wooden Table",
+
+	Description = "A wooden multipurpose table.",
+
+	Model = "models/gmod_tower/gametable.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 1,
+
+	StorePrice = 1000,
+
+	MoveSound = "furniture2",
+
+	DateAdded = 1399291083,
+
 })
 
 RegisterItem("ttttable",{
@@ -2146,70 +2280,124 @@ RegisterItem("ggnome",{
 	NewItem = false,
 })
 
-RegisterItem("leatherarmchair",{
-	Name = "Leather Armchair",
-	Description = "No* cows were harmed in the making of this chair. *Lots of",
-	Model = "models/props_vtmb/armchair.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 1,
-	StorePrice = 700,
-	MoveSound = "furniture2",
+RegisterItem("leatherarmchair",{
+
+	Name = "Leather Armchair",
+
+	Description = "No* cows were harmed in the making of this chair. *Lots of",
+
+	Model = "models/props_vtmb/armchair.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 1,
+
+	StorePrice = 700,
+
+	MoveSound = "furniture2",
+
 })
 
-RegisterItem("leathersofa",{
-	Name = "Leather Sofa",
-	Description = "Triple the Leather Armchair fun! Wow!",
-	Model = "models/props_vtmb/sofa.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 1,
-	StorePrice = 1700,
-	MoveSound = "furniture3",
+RegisterItem("leathersofa",{
+
+	Name = "Leather Sofa",
+
+	Description = "Triple the Leather Armchair fun! Wow!",
+
+	Model = "models/props_vtmb/sofa.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 1,
+
+	StorePrice = 1700,
+
+	MoveSound = "furniture3",
+
 })
 
-RegisterItem("chairfancyhotel",{
-	Name = "Hotel Chair",
-	Description = "We stole this chair from a hotel just for you. Don't tell anybody.",
-	Model = "models/props_vtmb/chairfancyhotel.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 1,
-	StorePrice = 1100,
-	MoveSound = "furniture",
+RegisterItem("chairfancyhotel",{
+
+	Name = "Hotel Chair",
+
+	Description = "We stole this chair from a hotel just for you. Don't tell anybody.",
+
+	Model = "models/props_vtmb/chairfancyhotel.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 1,
+
+	StorePrice = 1100,
+
+	MoveSound = "furniture",
+
 })
 
-RegisterItem("brownarmchair",{
-	Name = "Brown Armchair",
-	Description = "Only has one cushion, and it makes a really awful cushion fort.",
-	Model = "models/splayn/rp/lr/chair.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 1,
-	StorePrice = 800,
-	MoveSound = "furniture2",
+RegisterItem("brownarmchair",{
+
+	Name = "Brown Armchair",
+
+	Description = "Only has one cushion, and it makes a really awful cushion fort.",
+
+	Model = "models/splayn/rp/lr/chair.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 1,
+
+	StorePrice = 800,
+
+	MoveSound = "furniture2",
+
 })
 
-RegisterItem("brownsofa",{
-	Name = "Brown Sofa",
-	Description = "Comes with three cushions, for a fort that's way better than the Brown Armchair one.",
-	Model = "models/splayn/rp/lr/couch.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 1,
-	StorePrice = 2000,
-	MoveSound = "furniture3",
+RegisterItem("brownsofa",{
+
+	Name = "Brown Sofa",
+
+	Description = "Comes with three cushions, for a fort that's way better than the Brown Armchair one.",
+
+	Model = "models/splayn/rp/lr/couch.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 1,
+
+	StorePrice = 2000,
+
+	MoveSound = "furniture3",
+
 })
 
-RegisterItem("moderncouchpt",{
-	Name = "Modern Couch",
-	Description = "Made from the finest yak hair and goose down, you'd think this would be comfortable. Unfortunately, the inside is yak hair and the outside is goose down. Also, it's modern.",
-	Model = "models/pt/lobby/pt_couch.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 1,
-	StorePrice = 1400,
-	MoveSound = "furniture3",
+RegisterItem("moderncouchpt",{
+
+	Name = "Modern Couch",
+
+	Description = "Made from the finest yak hair and goose down, you'd think this would be comfortable. Unfortunately, the inside is yak hair and the outside is goose down. Also, it's modern.",
+
+	Model = "models/pt/lobby/pt_couch.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 1,
+
+	StorePrice = 1400,
+
+	MoveSound = "furniture3",
+
 })
 
 RegisterItem("btoilet",{
@@ -2449,74 +2637,142 @@ RegisterItem( "Duel357", {
 	WeaponName = ".357",
 } )
 
-RegisterItem("stocking",{
-	Name = "Stocking",
-	Description = "A decorative stocking for all your small gifts.",
-	Model = "models/wilderness/stocking.mdl",
-	UniqueInventory = false,
-	DrawModel = true,
-	StoreId = 10,
-	StorePrice = 125,
-
-	/*Manipulator = function( ang, pos, normal )
-		ang:RotateAroundAxis( ang:Right(), 270 )
-		ang:RotateAroundAxis( ang:Up(), 180 )
-		ang:RotateAroundAxis( ang:Forward(), 180 )
-
-		pos = pos + ( normal * -15 )
-
-		return pos
-	end*/
-})
-
-for i=0, 8 do
-	RegisterItem("presenta" .. i,{
-		Name = "Big Present #" ..( i + 1 ),
-		Description = "A decorative large present to put under your christmas tree.",
-		Model = "models/wilderness/presenta.mdl",
-		UniqueInventory = false,
-		DrawModel = true,
-		StoreId = 10,
-		ModelSkinId = i,
-		StorePrice = 180,
-	})
-end
-
-for i=0, 7 do
-	RegisterItem("present2b" .. i,{
-		Name = "Present #" ..( i + 1 ),
-		Description = "A decorative present to put under your christmas tree.",
-		Model = "models/wilderness/presentb.mdl",
-		UniqueInventory = false,
-		DrawModel = true,
-		StoreId = 10,
-		ModelSkinId = i,
-		StorePrice = 80,
-	})
-end
-
-RegisterItem("christmastree",{
-	Name = "Christmas Tree w/ Lights and Train",
-	Description = "A celebrative christmas tree with its own train set and lights!",
-	Model = "models/wilderness/hanukkahtree.mdl",
-	ClassName = "gmt_christmas_tree",
-	UniqueInventory = true,
-	DrawModel = true,
-	CanRemove = true,
-	StoreId = 10,
-	StorePrice = 10000,
-})
-
-RegisterItem("christmastreesimple",{
-	Name = "Christmas Tree",
-	Description = "A celebrative christmas tree!",
-	Model = "models/wilderness/hanukkahtree.mdl",
-	ClassName = "gmt_christmas_tree_simple",
-	UniqueInventory = true,
-	DrawModel = true,
-	CanRemove = true,
-	StoreId = 10,
-	StorePrice = 3000,
+RegisterItem("stocking",{
+
+	Name = "Stocking",
+
+	Description = "A decorative stocking for all your small gifts.",
+
+	Model = "models/wilderness/stocking.mdl",
+
+	UniqueInventory = false,
+
+	DrawModel = true,
+
+	StoreId = 10,
+
+	StorePrice = 125,
+
+
+
+	/*Manipulator = function( ang, pos, normal )
+
+		ang:RotateAroundAxis( ang:Right(), 270 )
+
+		ang:RotateAroundAxis( ang:Up(), 180 )
+
+		ang:RotateAroundAxis( ang:Forward(), 180 )
+
+
+
+		pos = pos + ( normal * -15 )
+
+
+
+		return pos
+
+	end*/
+
+})
+
+
+
+for i=0, 8 do
+
+	RegisterItem("presenta" .. i,{
+
+		Name = "Big Present #" ..( i + 1 ),
+
+		Description = "A decorative large present to put under your christmas tree.",
+
+		Model = "models/wilderness/presenta.mdl",
+
+		UniqueInventory = false,
+
+		DrawModel = true,
+
+		StoreId = 10,
+
+		ModelSkinId = i,
+
+		StorePrice = 180,
+
+	})
+
+end
+
+
+
+for i=0, 7 do
+
+	RegisterItem("present2b" .. i,{
+
+		Name = "Present #" ..( i + 1 ),
+
+		Description = "A decorative present to put under your christmas tree.",
+
+		Model = "models/wilderness/presentb.mdl",
+
+		UniqueInventory = false,
+
+		DrawModel = true,
+
+		StoreId = 10,
+
+		ModelSkinId = i,
+
+		StorePrice = 80,
+
+	})
+
+end
+
+
+
+RegisterItem("christmastree",{
+
+	Name = "Christmas Tree w/ Lights and Train",
+
+	Description = "A celebrative christmas tree with its own train set and lights!",
+
+	Model = "models/wilderness/hanukkahtree.mdl",
+
+	ClassName = "gmt_christmas_tree",
+
+	UniqueInventory = true,
+
+	DrawModel = true,
+
+	CanRemove = true,
+
+	StoreId = 10,
+
+	StorePrice = 10000,
+
+})
+
+
+
+RegisterItem("christmastreesimple",{
+
+	Name = "Christmas Tree",
+
+	Description = "A celebrative christmas tree!",
+
+	Model = "models/wilderness/hanukkahtree.mdl",
+
+	ClassName = "gmt_christmas_tree_simple",
+
+	UniqueInventory = true,
+
+	DrawModel = true,
+
+	CanRemove = true,
+
+	StoreId = 10,
+
+	StorePrice = 3000,
+
 })
 
 RegisterItem("ppiece",{
@@ -2530,43 +2786,54 @@ RegisterItem("ppiece",{
 })
 --gmtc items
 
-RegisterItem("coffeepaper",{
-	Name = "DMCA Notice",
-	Description = "Imagine someone taking most of a book you wrote for 10 years and republishing it without your permission as their own (while making edits to it as well). It's a piece of work that does not belong to them and they don't have the rights to rehost it. It's always been closed source since it started and if we wanted to bring it back - we would do that on our own. And personally it's upsetting to me because it's the 10th year anniversary to a project I care deeply about and no one asked how I'd feel about it.",
-	Model = "models/props_junk/garbage_newspaper001a.mdl",
-	DrawModel = true,
-	StoreId = 28,
-	StorePrice = 50,
+RegisterItem("rustedbike",{
+
+	Name = "Rusted Bycicle",
+
+	Description = "Wheels don't turn anymore btw.",
+
+	Model = "models/props_junk/bicycle01a.mdl",
+
+	DrawModel = true,
+
+	StoreId = 28,
+
+	StorePrice = 80,
+
 	NewItem = false
 })
 
-RegisterItem("rustedbike",{
-	Name = "Rusted Bycicle",
-	Description = "Wheels don't turn anymore btw.",
-	Model = "models/props_junk/bicycle01a.mdl",
-	DrawModel = true,
-	StoreId = 28,
-	StorePrice = 80,
+RegisterItem("woodshardpiece",{
+
+	Name = "Wooden Shard",
+
+	Description = "Someone threw this at me.",
+
+	Model = "models/Gibs/wood_gib01b.mdl",
+
+	DrawModel = true,
+
+	StoreId = 28,
+
+	StorePrice = 5,
+
 	NewItem = false
 })
 
-RegisterItem("woodshardpiece",{
-	Name = "Wooden Shard",
-	Description = "Someone threw this at me.",
-	Model = "models/Gibs/wood_gib01b.mdl",
-	DrawModel = true,
-	StoreId = 28,
-	StorePrice = 5,
-	NewItem = false
-})
+RegisterItem("metalwrench",{
 
-RegisterItem("metalwrench",{
-	Name = "Wrench",
-	Description = "Nice lil' tool to fix your... tools with?",
-	Model = "models/props_c17/tools_wrench01a.mdl",
-	DrawModel = true,
-	StoreId = 28,
-	StorePrice = 35,
+	Name = "Wrench",
+
+	Description = "Nice lil' tool to fix your... tools with?",
+
+	Model = "models/props_c17/tools_wrench01a.mdl",
+
+	DrawModel = true,
+
+	StoreId = 28,
+
+	StorePrice = 35,
+
 	NewItem = false
 })
 
