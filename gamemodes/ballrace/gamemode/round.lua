@@ -493,7 +493,6 @@ function GM:PlayerComplete(ply)
 
 	--PrintMessage( HUD_PRINTTALK, ply:Name()..' got '..PlacementPostfix(placement)..' place! Time Completed: '..string.FormattedTime(ply.RaceTime, "%02i:%02i:%02i")..'.' )
 	for k,v in pairs(player.GetAll()) do
-		--v:SendLua([[chat.AddText( Color( 255, 255, 255 ), "LVL ]]..level..[[ #]]..placement..[[ ]]..ply:Name()..[[ |]]..string.Replace(string.FormattedTime(ply.RaceTime, "%2i:%02i.%02i"), "0:", "")..[[")]])
 		v:SendLua([[GTowerChat.Chat:AddText("LVL ]]..level..[[ #]]..placement..[[ ]]..ply:Name()..[[ |]]..string.Replace(string.FormattedTime(ply.RaceTime, "%2i:%02i.%02i"), "0:", "")..[[", Color(255, 255, 255, 255))]])
 	end
 end

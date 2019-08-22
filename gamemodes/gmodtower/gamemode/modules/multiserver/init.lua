@@ -1,17 +1,12 @@
-
 AddCSLuaFile("shared.lua")
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("cl_command.lua")
 AddCSLuaFile("cl_mapchooser.lua")
 include("shared.lua")
-//include("join.lua")
-//include("servers.lua")
 include("network.lua")
 include("waiting.lua")
 include("player.lua")
-//include("Nametable.lua")
 include("server/server.lua")
-//include("mapchooser.lua")
 
 GTowerServers.Servers = {}
 

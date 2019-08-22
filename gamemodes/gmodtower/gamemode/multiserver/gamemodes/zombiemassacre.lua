@@ -2,27 +2,28 @@
 GMode.Name = "Zombie Massacre"
 GMode.Gamemode = "zombiemassacre"
 
-//Set true if players should be kicked if their "goserver" value on the database is not the same as the local server
+-- Set true if players should be kicked if their "goserver" value on the database is not the same as the local server
 GMode.Private = true
 
-//Set true if this is only played by VIPs
+-- Set true if this is only played by VIPs
 GMode.VIP = false
 
-//This is amount of time between the players being server to play
-//And the players be able to join the game
+-- This is amount of time between the players being server to play
+-- And the players be able to join the game
 GMode.WaitingTime = 20.0
 
-//This setting is for large group join
-//When you want all people to connect at once, the server must be empty to people be able to join.
-//Set this to false if you want people to be able to go in and out of the server at any time.
-//Set also the min amount of players to join the sevrer
+-- This setting is for large group join
+-- When you want all people to connect at once, the server must be empty to people be able to join.
+-- Set this to false if you want people to be able to go in and out of the server at any time.
+-- Set also the min amount of players to join the sevrer
 GMode.OneTimeJoin = true
 GMode.MinPlayers = 2
+GMode.Soloable = true
 
-//Set this if only a group can join
+-- Set this if only a group can join
 GMode.GroupJoin = false
 
-GMode.MaxPlayers = 8 //Leave nil if the maxplayers are suppost to be the server maxplayers
+GMode.MaxPlayers = 8 -- Leave nil if the maxplayers are suppost to be the server maxplayers
 GMode.Gameplay = "3rd Person"
 
 GMode.Maps = {"gmt_zm_arena_underpass02", "gmt_zm_arena_gasoline01", "gmt_zm_arena_scrap01", "gmt_zm_arena_acrophobia01","gmt_zm_arena_trainyard01","gmt_zm_arena_thedocks01","gmt_zm_arena_foundation02"}
@@ -79,17 +80,17 @@ local function NiceTimeShort( seconds, format )
 
 	local str = ""
 
-	// Min
+	--  Min
 	str = str .. minsLeft
 
 	if format then str = str .. "<color=ltgrey>" end
 	str = str .. " " .. Pluralize( "min", minsLeft )
 	if format then str = str .. "</color>" end
 
-	// Space
+	--  Space
 	str = str .. " "
 
-	// Secs
+	--  Secs
 	str = str .. secsLeft
 
 	if format then str = str .. "<color=ltgrey>" end
@@ -135,21 +136,21 @@ function GMode:ProcessData( ent, data )
 	local leftTitle = "TIME LEFT"
 	local rightTitle = "DAY"
 
-	// Game running, now parse
+	--  Game running, now parse
 	local Exploded = string.Explode( "||||", data )
 
-	// Time
+	--  Time
 	local Timeleft = tonumber( Exploded[1] )
 	local leftString = NiceTimeShort( Timeleft, true )
 
-	// Rounds
+	--  Rounds
 	local roundExploded = string.Explode( "/", Exploded[2] )
 	local CurRound = roundExploded[1]
 	local MaxRounds = roundExploded[2]
 
 	local rightString = string.format( "%d <color=ltgrey>/</color> %d", CurRound, MaxRounds )
 
-	// Parse and set position
+	--  Parse and set position
 	ent.LeftTitle = markup.Parse( "<font=GTowerGMTitle><color=grey>" .. leftTitle .. "</color></font>" )
 	ent.LeftMarkup = markup.Parse( "<font=GTowerHUDMainLarge>" .. leftString .. "</font>" )
 	

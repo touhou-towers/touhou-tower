@@ -1,10 +1,10 @@
 
-//Return the list of players what would be joining the server
+-- Return the list of players what would be joining the server
 function ServerMeta:GetMovingPlayers()
 
 	local PlayerBatches = self:GetBatches()
 
-	//print(self.Id, "GetMovingPlayers", PlayerBatches, #PlayerBatches, table.Count(PlayerBatches))
+	-- print(self.Id, "GetMovingPlayers", PlayerBatches, #PlayerBatches, table.Count(PlayerBatches))
 	if !PlayerBatches || #PlayerBatches == 0 then return end
 
 	return PlayerBatches[1]
@@ -12,31 +12,40 @@ function ServerMeta:GetMovingPlayers()
 end
 
 function ServerMeta:IsReady()
-
-	//First let's check if the server is ready
-	//And that the gamemode handles players in packs
-	//Give 60 seconds from last players joining to the server to update
-	//print(self.Id, "IsReady", self:Online(), self.Status, self.LastPlayerJoin, CurTime())
+	-- First let's check if the server is ready
+	-- And that the gamemode handles players in packs
+	-- Give 60 seconds from last players joining to the server to update
+	-- print(self.Id, "IsReady", self:Online(), self.Status, self.LastPlayerJoin, CurTime())
 
 	if !self:Online() || self.Status == 2 || (self.LastPlayerJoin && (CurTime() - self.LastPlayerJoin) < 60) then
 		return false
 	end
 
-	//Now check for the player count and see if it meets the requirements
+	-- Now check for the player count and see if it meets the requirements
 	local PlayerList = self:GetMovingPlayers()
-	local Gamemode = self:GetGamemode()
-
-	//print(self.Id, "PlayerList", PlayerList)
 
 	if !PlayerList then
+		-- reset the auto-go timer
+		self.QueuedAt = CurTime()
 		return false
 	end
 
-	//Check the limitations with the minimun amount of players
+	-- Check the limitations with the minimun amount of players
 	local PlayerCount = table.Count( PlayerList )
 
-	//print(self.Id, "PlayerCount", PlayerCount, Gamemode.MinPlayers)
-	if PlayerCount == 0 || (Gamemode.MinPlayers && PlayerCount < Gamemode.MinPlayers) then
+	-- cant start without anyone
+	if PlayerCount == 0 then
+		-- reset the auto-go timer
+		self.QueuedAt = CurTime()
+		return false
+	end
+
+	local Gamemode = self:GetGamemode()
+
+	-- if not enough people
+	-- if not soloable OR not enough time has passed
+	if (Gamemode.MinPlayers && PlayerCount < Gamemode.MinPlayers) && 
+		(not Gamemode.Soloable || CurTime() - self.QueuedAt < 30) then 
 		return false
 	end
 
@@ -67,26 +76,23 @@ function ServerMeta:Think()
 	local IsReady = self:IsReady()
 	local Gamemode = self:GetGamemode()
 
-	if IsReady == true then
-
-		//print(self.GoJoinTime, #self:GetMovingPlayers())
-
+	if IsReady then
+		-- print(self.GoJoinTime, #self:GetMovingPlayers())
 		if !self.GoJoinTime then
-
-			// don't vote while the game is in state 3, it will reset itself
+			-- don't vote while the game is in state 3, it will reset itself
 			if self.Status != 1 then return end
 
-			//print(self.Id, "start vote")
+			-- print(self.Id, "start vote")
 			self:StartMapVote()
 			self.SendPlayersFinal = nil
 
 		elseif CurTime() > self.GoJoinTime - 1 && self.MapChangeSent != true then
 
-			//print(self.Id, "count vote")
+			-- print(self.Id, "count vote")
 			self:CountMapVotes()
 			local movingPlayers = self:GetMovingPlayers()
 			
-			self.SendPlayersFinal = movingPlayers // this is it, these players are going whether they like it or not
+			self.SendPlayersFinal = movingPlayers -- this is it, these players are going whether they like it or not
 			local SteamIDS = ""
 			for k,v in pairs( movingPlayers ) do
 				if k == #movingPlayers then
@@ -100,42 +106,29 @@ function ServerMeta:Think()
 		elseif CurTime() > self.GoJoinTime && self.SendPlayersFinal then
 
 			if self.Status == 3 then
-				//print(self.Id, "move it!")
+				-- print(self.Id, "move it!")
 				self:PlayersToServer(self.SendPlayersFinal)
 			end
 
 		else
-
 			self:SendMapVote()
-
 		end
+	elseif self.GoJoinTime then
+		umsg.Start("GServ", nil )
+		umsg.Char( 10 )
+		umsg.Char( self.Id )
+		umsg.End()
 
-	else
+		timer.Destroy( "MultiServerReady" .. self.Id )
+		timer.Destroy( "MultiServerChooseMap" .. self.Id )
 
-		if self.GoJoinTime then
-
-			if self.GoJoinTime then
-				umsg.Start("GServ", nil )
-					umsg.Char( 10 )
-					umsg.Char( self.Id )
-				umsg.End()
-
-				timer.Destroy( "MultiServerReady" .. self.Id )
-				timer.Destroy( "MultiServerChooseMap" .. self.Id )
-
-				self.GoJoinTime = nil
-
-			end
-
-		end
-
+		self.GoJoinTime = nil
 	end
-
 end
 
 function ServerMeta:PlayersToServer(PlayerList)
 
-	//Well, the time has passed, and we are still here
+	-- Well, the time has passed, and we are still here
 	self.LastPlayerJoin = CurTime()
 	self.GoJoinTime = nil
 

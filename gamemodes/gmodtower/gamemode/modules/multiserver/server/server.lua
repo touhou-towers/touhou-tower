@@ -1,4 +1,3 @@
-
 ServerMeta = {}
 
 local LocalServerMeta = ServerMeta
@@ -23,7 +22,12 @@ function ServerMeta:CreateServer( Id )
 
 	o.Id = Id
 	o.GamemodeValue = ""
-	o.PlayerList = {} //List of player waiting to join the server
+	o.PlayerList = {} -- List of player waiting to join the server
+
+	-- some custom fields to allow the game to start depending on
+	-- if someone has been queued up for a while and if there are not
+	-- enough players queued
+	o.QueuedAt = CurTime()
 
 	o.Ip = ""
 	o.Port = ""

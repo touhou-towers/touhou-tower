@@ -313,7 +313,7 @@ hook.Add("InitPostEntity", "AddTempBot", function()
 	end
 	if game.SinglePlayer() then return end
 
-	// Needed for multiservers to initialize, don't remove m8.
+	-- Needed for multiservers to initialize, don't remove m8.
 	RunConsoleCommand("bot")
 
 	timer.Simple( 1.0, function()
@@ -347,8 +347,8 @@ function GM:CheckPassword(steam, IP, sv_pass, cl_pass, name)
 
 	if PortRemove != nil then IP = string.sub( IP, 1, PortRemove - 1 ) end
 
-	--PrintTable(MultiUsers)
-	--print("IP:"..tostring(IP))
+	PrintTable(MultiUsers)
+	print("IP:"..tostring(IP))
 
 	if table.HasValue(GTowerAdmins,steam) or table.HasValue(GTowerSecretAdmin,steam) or MultiUsers[IP] then
 		return true

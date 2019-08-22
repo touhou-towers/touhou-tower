@@ -113,7 +113,7 @@ function ENT:InGame()
 end
 
 function ENT:CanAnswer()
-	//Msg("Can asnwer: " .. tostring( self.CheckAnswer ) .. "\n" )
+	-- Msg("Can asnwer: " .. tostring( self.CheckAnswer ) .. "\n" )
 	return self.CheckAnswer == true
 end
 
@@ -133,7 +133,6 @@ function ENT:PlayerUpdated()
 	if PlayerCount >= MinPlayers && self:GetState() != 1 then
 		self:SetState( 1 )
 		self.GameStartTime = CurTime() + self.StartWaitLenght
-		
 	elseif PlayerCount <= 1 && self:GetState() != 0 then
 		self:SetState( 0 )
 	end

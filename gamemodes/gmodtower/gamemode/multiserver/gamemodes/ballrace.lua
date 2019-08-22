@@ -2,30 +2,32 @@
 GMode.Name = "Ball Race"
 GMode.Gamemode = "ballrace"
 
-//Set true if players should be kicked if their "goserver" value on the database is not the same as the local server
+-- Set true if players should be kicked if their "goserver" value on the database is not the same as the local server
 GMode.Private = true
 
-//This is amount of time between the players being server to play
-//And the players be able to join the game
+-- This is amount of time between the players being server to play
+-- And the players be able to join the game
 GMode.WaitingTime = 15.0
 
-//This setting is for large group join
-//When you want all people to connect at once, the server must be empty to people be able to join.
-//Set this to false if you want people to be able to go in and out of the server at any time.
-//Set also the min amount of players to join the sevrer
+-- This setting is for large group join
+-- When you want all people to connect at once, the server must be empty to people be able to join.
+-- Set this to false if you want people to be able to go in and out of the server at any time.
+-- Set also the min amount of players to join the sevrer
 GMode.OneTimeJoin = true
 GMode.MinPlayers = 2
+GMode.Soloable = true
 
-//Set this if only a group can join
+-- Set this if only a group can join
 GMode.GroupJoin = false
 
-GMode.MaxPlayers = 8 //Leave nil if the maxplayers are suppost to be the server maxplayers
+GMode.MaxPlayers = 8 -- Leave nil if the maxplayers are suppost to be the server maxplayers
 GMode.Gameplay = "Physics-based Rolling"
 
 GMode.View = {
 	pos = Vector( 9619, 11281, 6754 ),
 	ang = Angle( 5.3, 157.5, 0 )
-}
+}
+
 GMode.Tips = {
 	"Falling will result in popping, which is altogether unpleasant.",
 	"Radioactive waste is hazardous to your health.",
@@ -33,7 +35,8 @@ GMode.Tips = {
 	"Collect the most bananas to get the most GMC.",
 	"In Memories, be weary of the Repellers and Attractors, they can be quite dangerous!",
 	"New to Ball Race? Play Skyworld first."
-}
+}
+
 GMode.Music = {
 	"GModTower/balls/BallsMusicWGrass.mp3",
 	"GModTower/balls/BallsMusicWKhromidro.mp3",
@@ -66,8 +69,8 @@ GMode.MapsNames = {
 	["gmt_ballracer_neonlights"] = "Neon Lights",
 	["gmt_ballracer_rainbowworld"] = "Rainbow World",
 	--["gmt_ballracer_miracle"] = "Miracle",
-	//["xc_sky"] = "Sky World",
-	//["xc_grass"] = "Grass World"
+	-- ["xc_sky"] = "Sky World",
+	-- ["xc_grass"] = "Grass World"
 }
 
 function GMode:GetMapTexture( map )
