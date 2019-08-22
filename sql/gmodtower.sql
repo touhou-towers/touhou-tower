@@ -856,7 +856,7 @@ CREATE TABLE IF NOT EXISTS `gm_jeopardy` (
   `enabled` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `categoryindex` (`cat`)
-) ENGINE=MyISAM AUTO_INCREMENT=161 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=161 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `gm_jeopardy`
@@ -1034,7 +1034,7 @@ DROP TABLE IF EXISTS `gm_loadingnames`;
 CREATE TABLE IF NOT EXISTS `gm_loadingnames` (
   `gamemode` text NOT NULL,
   `steamids` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `gm_loadingnames`
@@ -1088,7 +1088,7 @@ CREATE TABLE IF NOT EXISTS `gm_log_trade` (
   `money2` int(11) NOT NULL,
   `recv1` text NOT NULL,
   `recv2` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
