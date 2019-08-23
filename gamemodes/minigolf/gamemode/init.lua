@@ -225,6 +225,7 @@ function GM:EntityTakeDamage( target, dmginfo )
 
 end
 
+//ConCommands
 concommand.Add( "minigolf_color", function( ply, cmd, args )
 	local color = tostring(args[1])
 	ply:SetNWString('BallColor', color)

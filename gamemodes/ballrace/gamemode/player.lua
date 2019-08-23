@@ -137,15 +137,19 @@ function GM:PlayerSwitchFlashlight(ply)
 end
 
 function GetPlayerStatus(ply)
+	local player_status
+
 	if ply:Team() == TEAM_DEAD then
-		return = "DEAD"
+		player_status = "DEAD"
 	elseif ply:Team() == TEAM_COMPLETED then
-		return = ply.placements
+		player_status = ply.placements
 	elseif GetState() == STATUS_WAITING then
-		return = "WAITING"
+		player_status = "WAITING"
 	elseif GetState() != STATUS_WAITING then
-		return = "PLAYING"
+		player_status = "PLAYING"
 	end
+
+	return player_status
 end
 
 local function SetBallId( ply, BallId )
