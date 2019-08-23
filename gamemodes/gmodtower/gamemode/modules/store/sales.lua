@@ -19,7 +19,7 @@ function GTowerStore:UpdateStatus(id, sale)
 	local rp = RecipientFilter()
 
 	for _, v in pairs( ents.FindByClass( StoreTbl.NpcClass ) ) do
-		if v:SetSale then
+		if v.SetSale then
 			v:SetSale( onsale )
 		end
 		rp:AddPVS(v:EyePos())
