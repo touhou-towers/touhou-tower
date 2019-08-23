@@ -19,8 +19,9 @@ function GTowerStore:UpdateStatus(id, sale)
 	local rp = RecipientFilter()
 
 	for _, v in pairs( ents.FindByClass( StoreTbl.NpcClass ) ) do
-		v:SetSale( onsale )
-		//v.Sale = onsale
+		if v:SetSale then
+			v:SetSale( onsale )
+		end
 		rp:AddPVS(v:EyePos())
 	end
 
@@ -31,12 +32,6 @@ function GTowerStore:UpdateStatus(id, sale)
 		net.WriteInt(id,16)
 		net.WriteInt(value,16)
 	net.Send(rp)
-
-	/*umsg.Start("Store", rp)
-		umsg.Char(5)
-		umsg.Char(id)
-		umsg.Float(value)
-	umsg.End()*/
 
 	return true
 end
