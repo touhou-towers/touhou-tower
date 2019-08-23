@@ -7,7 +7,7 @@ function GM:Think()
 	for k,v in pairs(player.GetAll()) do
 		if v:GetNWInt("Combo") > 0 then
 			if CurTime() > v.ComboTime then
-				v:SetNWInt("Combo",0)
+				v:SetNWInt("Combo", 0)
 			end
 		end
 	end
@@ -41,15 +41,11 @@ function GM:Think()
 		SetGlobalInt( "ZMDayTime", CurTime() + 15 )
 
 		for _, ply in ipairs( player.GetAll() ) do
-
-			--ply:Freeze( false )
-			--ply:ResetCamera()
 			ply:SetFrags( 0 )
 			ply:SetDeaths( 0 )
 			ply:SetNWInt( "Lives", 2 )
 			ply:SetNWInt( "Points", 0 )
 			ply:StripAllInventory()
-
 		end
 	elseif self:GetState() == STATE_UPGRADING && self:GetTimeLeft() <= 0 then
 		for _, ply in ipairs( player.GetAll() ) do
@@ -168,9 +164,7 @@ function GM:Think()
 		self.LostRound = false
 
 		self:FlyAwayLittleHeli()
-
 		self:GiveMoney()
-
 		self:EndDay()
 	elseif self:GetState() == STATE_INTERMISSION && self:GetTimeLeft() <= 0 then
 	

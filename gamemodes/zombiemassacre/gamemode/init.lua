@@ -33,8 +33,6 @@ include( "shared.lua" )
 
 util.AddNetworkString( "gmt_heli_fly" )
 
-GM.NPCLimit = 120
-
 CreateConVar("gmt_srvid", 8 )
 
 function GM:Intialize()
@@ -243,8 +241,11 @@ function GM:SpawnZombies()
 		entclass = table.Random(self.RandoInfected)
 	end
 
-	if curzomb < self.NPCLimit then
-		local zmSpawns = math.min(player.GetCount() + GetGlobalInt('Round'), self.NPCLimit - curzomb)
+	-- make zombie spawns depend on number of players, although it would be best
+	-- to store this somewhere but i dont know a good place to do so
+	local pcount = player.GetCount()
+	if curzomb < (30 * pcount) then
+		local zmSpawns = math.min(pcount + GetGlobalInt('Round') - 1, self.NPCLimit - curzomb)
 		for _ = 1, zmSpawns do
 			local zom = ents.Create( entclass )
 			zom:SetCustomCollisionCheck( true )
@@ -265,7 +266,7 @@ function GM:SpawnZombies()
 	-- delay is in seconds so let's just put it at 1 and spawn zombies depending on the players
 	-- theoretically I should be able to just put self:SpawnZombies instead of the function?
 	-- well binding problems and such and i dont want to risk it for now
-	timer.Simple(1, function() self:SpawnZombies() end )
+	timer.Simple(2, function() self:SpawnZombies() end )
 
 end
 

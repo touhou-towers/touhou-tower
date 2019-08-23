@@ -1,5 +1,3 @@
-
------------------------------------------------------
 function GM:Move( ply, move )
 	if ply:KeyDown( IN_FORWARD ) && ply:KeyDown( IN_MOVELEFT ) then
 		move:SetMoveAngles( Angle( 315, 0, 0 ) )
