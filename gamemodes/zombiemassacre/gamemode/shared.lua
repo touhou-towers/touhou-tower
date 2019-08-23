@@ -230,6 +230,10 @@ Payouts = {
 	}
 }
 
+for k, v in pairs(Payouts) do
+	payout.Register(k, v)
+end
+
 function GM:GiveMoney()
 	if CLIENT then return end
 

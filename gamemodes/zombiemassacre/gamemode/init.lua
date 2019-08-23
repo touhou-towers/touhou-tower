@@ -244,8 +244,9 @@ function GM:SpawnZombies()
 	-- make zombie spawns depend on number of players, although it would be best
 	-- to store this somewhere but i dont know a good place to do so
 	local pcount = player.GetCount()
-	if curzomb < (30 * pcount) then
-		local zmSpawns = math.min(pcount + GetGlobalInt('Round') - 1, self.NPCLimit - curzomb)
+	local limit = pcount * 30
+	if curzomb < limit then
+		local zmSpawns = math.min(pcount + GetGlobalInt('Round') - 1, limit - curzomb)
 		for _ = 1, zmSpawns do
 			local zom = ents.Create( entclass )
 			zom:SetCustomCollisionCheck( true )
