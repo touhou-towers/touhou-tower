@@ -155,30 +155,21 @@ function BallRacerChooser:GetPanel( model, name, friendlyname, camera )
 	return Panel
 end
 
- -- if the menu button is down
-local IsButtonDown
-
-function BallMenu()
-	if IsButtonDown then
-		BallRacerChooser:Open()
-	else
-		BallRacerChooser:Close()
-	end
-end
-
 -- when the menu is opened...
 hook.Add("GtowerShowMenus", "bcontextmenuopen", function()
 	IsButtonDown = true
 	RunConsoleCommand("gmt_requestballupdate")
-	BallMenu()
+	BallRacerChooser:Open()
 	gui.EnableScreenClicker(true)
 end)
 
 -- when the menu is closed...
 -- this makes me question if IsButtonDown is even needed
+-- eh ill change and see, not like there are any balls to pick
+-- from
 hook.Add("GtowerHideMenus", "bcontextmenuclose", function()
 	IsButtonDown = false
-	BallMenu()
+	BallRacerChooser:Close()
 	gui.EnableScreenClicker(false)
 end)
 
@@ -196,4 +187,4 @@ net.Receive( "GtBall", function(len)
 		ChosenId = net.ReadChar()
 		cookie.Set("GMTChosenBall", ChosenId )
 	end
-end )
+end)

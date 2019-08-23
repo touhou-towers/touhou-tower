@@ -39,7 +39,7 @@ local function PanelGuiThink()
 		
 		PanelGui:SetPos( Source + (Target-Source) * (1-Perc), PanelYPos )
 		
-	else //Standing in the middle of screen
+	else -- Standing in the middle of screen
 		
 		PanelGui:SetPos( ScrW() / 2 - PanelGui:GetWide() / 2, PanelYPos )
 		
