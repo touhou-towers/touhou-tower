@@ -13,34 +13,31 @@ STAGE_FAILED = 3
 local lcount = 0
 
 function LvlAmount()
-
 	if lcount != 0 then return lcount end
 
 	for k,v in pairs(ents.FindByClass( "info_target" )) do
-
-		if (string.StartWith(v:GetName(),"lvl") || string.StartWith(v:GetName(),"lv")) then
+		if string.StartWith(v:GetName(), "lv") then
 			lcount = lcount + 1
 		end
 	end
-
 	return lcount
-
 end
 
 hook.Add("GTowerMsg", "GamemodeMessage", function()
 	if player.GetCount() < 1 then
 		return "#nogame"
 	else
+		local levels = LvlAmount() + 1
 		if LateSpawn != nil && (LateSpawn:GetName() == 'bonus_start' || LateSpawn:GetName() == 'bns_start' || LateSpawn:GetName() == 'bonus') then
-			return "-1/" .. LvlAmount()+1
+			return "-1/" .. levels
 		else
-			return tostring(math.Clamp( level, 1, LvlAmount()+1 )) .. "/" .. LvlAmount()+1
+			return tostring(math.Clamp( level, 1, levels )) .. "/" .. levels
 		end
 	end
 end )
 
+-- TODO: figure out how this works
 function GetNextSpawn()
-
 	-- Check if it's lvl 1.
 	for k,v in pairs(ents.FindByClass("info_target")) do
 		if LateSpawn == nil then
@@ -61,7 +58,7 @@ function GetNextSpawn()
 			end
 		else
 
-		// Path management
+		-- Path management
 		for k,v in pairs(ents.FindByClass("info_target")) do
 		if string.StartWith( LateSpawn:GetName(), "lvlRT" ) or string.StartWith( LateSpawn:GetName(), "lvlLT" ) then
 			if LateSpawn:GetName() != "lvlLT_2_start" and LateSpawn:GetName() != "lvlRT_2_start" then
@@ -81,28 +78,28 @@ function GetNextSpawn()
 
 	end
 
-	// Prevents the other code from running
+	-- Prevents the other code from running
 	local memlvls = {"lvl6_start","lvlLT_1_start","lvlLT_2_start","lvlRT_1_start","lvlRT_2_start"}
 	if string.StartWith( game.GetMap(), "gmt_ballracer_memories" ) and table.HasValue(memlvls,LateSpawn:GetName()) then return end
 
-	// Get the next level under normal circumstances
+	-- Get the next level under normal circumstances
 	for k,v in pairs(ents.FindByClass("info_target")) do
-		// Gets the number of the current spawn
+		-- Gets the number of the current spawn
 		local CurLVL = string.gsub( LateSpawn:GetName(), '[%a _]', '' )
 
-		// Gets the name before the number, in every map always 'lvl'.
+		-- Gets the name before the number, in every map always 'lvl'.
 		local CurLVLName = string.gsub( LateSpawn:GetName(), '%d', '' )
 
-		// Checks for the left/right paths on Memories.
+		-- Checks for the left/right paths on Memories.
 
-		// No paths found, gets the first 3 letters.
+		-- No paths found, gets the first 3 letters.
 		if string.StartWith( game.GetMap(), "gmt_ballracer_neonlights" ) then
 			CurLVLName = string.sub( CurLVLName, 1, 2 )
 		else
 			CurLVLName = string.sub( CurLVLName, 1, 3 )
 		end
 
-		// Makes it 'lvlnumber_start'
+		-- Makes it 'lvlnumber_start'
 		if v:GetName() == CurLVLName .. ( tonumber( CurLVL ) + 1 ) .. "_start" then return v end
 	end
 end
@@ -199,14 +196,9 @@ function GM:StartRound()
 	for k,v in pairs(player.GetAll()) do v.BestTime = nil end
 
 	if NextMap then
-		--timer.Simple(0.5, function() MapVote.Start(voteLength, allowCurrentMap, mapLimit, 'gmt_ballracer_') end)
 		return
 	end
---[[
-	for k, v in pairs( ents.FindByClass( "secret_banana" ) ) do
-		v:Remove()
-	end
---]]
+
 	SetState(STATUS_SPAWNING)
 
 	GAMEMODE:SpawnAllPlayers()
@@ -235,70 +227,6 @@ function GM:StartRound()
 		timer.Create("RoundEnd", GAMEMODE.DefaultLevelTime, 1, GAMEMODE.StopRound, GAMEMODE)
 		SetTime(CurTime() + GAMEMODE.DefaultLevelTime)
 	end
-	-- local banana = ents.Create( "secret_banana" )
---[[
-	if game.GetMap() == "gmt_ballracer_facile" then
-		banana:SetPos( Vector( 6529.704102, -2639.191895, 976.031250 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_grassworld01" then
-		banana:SetPos( Vector( -11604.712891, 1274.085327, -87.976440 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_iceworld03" then
-		banana:SetPos( Vector( -8052.416016, -1020.629761, 3399.081299 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_khromidro02" then
-		banana:SetPos( Vector( -3301.433105, 894.710388, 816.031250 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_memories04" then
-		banana:SetPos( Vector( -7167.748535, -3720.391846, 313.542908 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_metalworld" then
-		banana:SetPos( Vector( 12423.720703, 2957.742188, 616.031250 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_midori" then
-		banana:SetPos( Vector( 3265.398926, -2512.039307, 688.281250 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_midorib5" then
-		banana:SetPos( Vector( 3265.398926, -2512.039307, 688.281250 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_nightball" then
-		banana:SetPos( Vector( 5349.190430, 1247.135376, -105.520416 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_paradise03" then
-		banana:SetPos( Vector( 4976.476563, 13198.571289, -227.520325 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_prism03" then
-		banana:SetPos( Vector( 2617.929688, 5062.750488, 959.974976 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_sandworld02" then
-		banana:SetPos( Vector( 584.904602, 7399.568848, 370.634308 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_skyworld01" then
-		banana:SetPos( Vector( 1216.430298, -223.383209, 408.031250 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_spaceworld" then
-		banana:SetPos( Vector( -5632.618652, -4192.765137, -127.968750 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_summit" then
-		banana:SetPos( Vector( -8089.092773, -5857.746094, 208.031250 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_waterworld02" then
-		banana:SetPos( Vector( 8755.546875, -1417.295654, 288.031250 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_flyinhigh01" then
-		banana:SetPos( Vector( -1664.000000, -9344.000000, 16.031250 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_neonlights" then
-		banana:SetPos( Vector( -1076.816895, -3247.885742, -336.675140 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_tranquil" then
-		banana:SetPos( Vector( -6645.774414, 6593.495117, 110 ) )
-		banana:Spawn()
-	elseif game.GetMap() == "gmt_ballracer_miracle" then
-		banana:SetPos( Vector( -3132.071533, -10153.786133, 90.666138 ) )
-		banana:Spawn()
-	end
---]]
 	placement = 0
 end
 
@@ -491,7 +419,6 @@ function GM:PlayerComplete(ply)
 	ply:SetNWInt( "Placement", placement )
 	ply:SetNWString( "CompletedTime", string.Replace(string.FormattedTime(ply.RaceTime, "%2i:%02i.%02i"), "0:", "") )
 
-	--PrintMessage( HUD_PRINTTALK, ply:Name()..' got '..PlacementPostfix(placement)..' place! Time Completed: '..string.FormattedTime(ply.RaceTime, "%02i:%02i:%02i")..'.' )
 	for k,v in pairs(player.GetAll()) do
 		v:SendLua([[GTowerChat.Chat:AddText("LVL ]]..level..[[ #]]..placement..[[ ]]..ply:Name()..[[ |]]..string.Replace(string.FormattedTime(ply.RaceTime, "%2i:%02i.%02i"), "0:", "")..[[", Color(255, 255, 255, 255))]])
 	end
@@ -505,7 +432,7 @@ function GM:SpawnAllPlayers()
 end
 
 function GM:UpdateSpecs(ply, dead)
-	// don't bother updating specs when we're spawning
+	-- don't bother updating specs when we're spawning
 	if GetState() == STATUS_SPAWNING then return end
 
 	for k,v in ipairs(player.GetAll()) do
@@ -548,16 +475,4 @@ function GM:SpectateNext(ply)
 	if players[newspec] then ent = players[newspec].Ball end
 
 	ply:SetBall(ent)
-end
-
-function PlacementPostfix(num)
-	if ( num == 1 ) then
-		return tostring(num.."st")
-	elseif ( num == 2 ) then
-		return tostring(num.."nd")
-	elseif ( num == 3 ) then
-		return tostring(num.."rd")
-	elseif ( num > 3 ) then
-		return tostring(num.."th")
-	end
 end

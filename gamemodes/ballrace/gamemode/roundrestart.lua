@@ -29,8 +29,10 @@ local preserve = {"player",
 	"trigger_soundscape",
 	"commentary_auto",
 	"point_commentary_node",
-	"point_commentary_viewpoint"}
+	"point_commentary_viewpoint"
+}
 
+-- a clone for some reason?
 local preservegame = {}
 
 for k,v in ipairs(preserve) do

@@ -48,8 +48,6 @@ if LivesTriesOverride[map] then
 	GM.Lives = LivesTriesOverride[map].Lives or GM.Lives
 end
 
-default_pm = 'models/player/kleiner.mdl'
-
 function SetTime(lvltime)
 	SetGlobalInt("GTIME", lvltime);
 end
@@ -64,61 +62,79 @@ end
 
 SetTime(GM.DefaultLevelTime)
 
-Levels = {
-	"gmt_ballracer_grassworld01",
-	"gmt_ballracer_iceworld03",
-	"gmt_ballracer_khromidro02",
-	"gmt_ballracer_memories04",
-	"gmt_ballracer_metalworld",
-	"gmt_ballracer_midorib5",
-	"gmt_ballracer_neonlights",
-	"gmt_ballracer_nightball",
-	"gmt_ballracer_paradise03",
-	"gmt_ballracer_prism03",
-	"gmt_ballracer_sandworld02",
-	"gmt_ballracer_skyworld01",
-	"gmt_ballracer_spaceworld",
-	"gmt_ballracer_summit",
-	"gmt_ballracer_waterworld02",
-	"gmt_ballracer_facile",
-	"gmt_ballracer_flyinhigh01",
-	"gmt_ballracer_tranquil",
-	"gmt_ballracer_rainbowworld"
-}
-
 LevelMusic = {
-	{"balls/ballsmusicwgrass",126.955102},
-	{"balls/ballsmusicwice",225},
-	{"balls/ballsmusicwkhromidro",322.377143},
-	{"balls/ballsmusicwmemories",260.127347},
-	{"balls/ballsmusicwmetal",169},
-	{"balls/midori_vox",259},
-	{"pikauch/music/manzaibirds",164},
-	{"balls/ballsmusicwnight",162},
-	{"balls/ballsmusicwparadise",305.057959},
-	{"balls/ballsmusicwprism",132},
-	{"balls/ballsmusicwsand",71},
-	{"balls/ballsmusicwsky",83.644082},
-	{"balls/ballsmusicwspace",119},
-	{"balls/ballswmusicsummit",200},
-	{"balls/ballsmusicwwater",195},
-	{"balls/ballsmusicwfacile",143},
-	{"balls/ballsmusicwflyinhigh",195},
-	{"balls/ballsmusicwtranquil",145},
-	{"rainbow_world/ravenholm",77}
+	gmt_ballracer_grassworld01 = {
+		"balls/ballsmusicwgrass", 126.955102
+	},
+	gmt_ballracer_iceworld03 = {
+		"balls/ballsmusicwice", 225
+	},
+	gmt_ballracer_khromidro02 = {
+		"balls/ballsmusicwkhromidro", 429.33333
+	},
+	gmt_ballracer_memories04 = {
+		"balls/ballsmusicwmemories", 260.127347
+	},
+	gmt_ballracer_metalworld = {
+		"balls/ballsmusicwmetal", 169
+	},
+	gmt_ballracer_midorib5 = {
+		"balls/midori_vox", 259
+	},
+	gmt_ballracer_neonlights = {
+		"pikauch/music/manzaibirds", 164
+	},
+	gmt_ballracer_nightball = {
+		"balls/ballsmusicwnight", 162
+	},
+	gmt_ballracer_paradise03 = {
+		"balls/ballsmusicwparadise", 305.057959
+	},
+	gmt_ballracer_prism03 = {
+		"balls/ballsmusicwprism", 132
+	},
+	gmt_ballracer_sandworld02 = {
+		"balls/ballsmusicwsand", 71
+	},
+	gmt_ballracer_skyworld01 = {
+		"balls/ballsmusicwsky", 83.644082
+	},
+	gmt_ballracer_spaceworld = {
+		"balls/ballsmusicwspace", 119
+	},
+	gmt_ballracer_summit = {
+		"balls/ballswmusicsummit", 200
+	},
+	gmt_ballracer_waterworld02 = {
+		"balls/ballsmusicwwater", 195
+	},
+	gmt_ballracer_facile = {
+		"balls/ballsmusicwfacile", 143
+	},
+	gmt_ballracer_flyinhigh01 =  {
+		"balls/ballsmusicwflyinhigh", 195
+	},
+	gmt_ballracer_tranquil = {
+		"balls/ballsmusicwtranquil", 145
+	},
+	gmt_ballracer_rainbowworld = {
+		"rainbow_world/ravenholm", 77
+	}
 }
-
-LevelMapSelect = table.KeyFromValue( Levels, game.GetMap() )
 
 function GetMusicSelection()
-	return LevelMusic[LevelMapSelect][1]
+	return LevelMusic[map][1]
 end
 
 function GetMusicDuration()
-	return LevelMusic[LevelMapSelect][2]
+	return LevelMusic[map][2]
 end
 
-GM.ExplodeSound	= "weapons/ar2/npc_ar2_altfire.wav"
+MUSIC_LEVEL = 1
+MUSIC_BONUS = 2
+
+music.Register( MUSIC_LEVEL, GetMusicSelection(), { Loops = true, Length = GetMusicDuration() } )
+music.Register( MUSIC_BONUS, "balls/bonusstage" )
 
 STATUS_WAITING = 1
 STATUS_PLAYING = 2
@@ -177,14 +193,3 @@ function GM:ShouldCollide(ent1, ent2)
 	end
 	return true
 end
-
-MUSIC_LEVEL = 1
-MUSIC_BONUS = 2
-
-if game.GetMap() == "gmt_ballracer_khromidro02" then
-	music.Register( MUSIC_LEVEL, GetMusicSelection(), { Length = 322 * ( 1 / .75 ), Pitch = 75, Loops = true } )
-else
-	music.Register( MUSIC_LEVEL, GetMusicSelection(), { Loops = true, Length = GetMusicDuration() } )
-end
-
-music.Register( MUSIC_BONUS, "balls/bonusstage" )

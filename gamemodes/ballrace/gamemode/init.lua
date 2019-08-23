@@ -89,7 +89,7 @@ function NumPlayers(team)
 end
 
 local function PlayerSetup( ply )
-	ply:SetModel(default_pm)
+	ply:SetModel("models/player/kleiner.mdl")
 	timer.Simple(2.5,function()
 		music.Play( 1, MUSIC_LEVEL, ply )
 	end)
