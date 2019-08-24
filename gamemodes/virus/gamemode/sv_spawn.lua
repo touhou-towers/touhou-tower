@@ -68,6 +68,8 @@ function GM:PlayerSpawn(ply)
 	-- jump power
 	if not GAMEMODE.jumpable then
 		ply:SetJumpPower(0)
+	else
+		ply:SetJumpPower(150)
 	end
 
 	ply:SetWalkSpeed(300)
