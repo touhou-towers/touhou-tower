@@ -65,7 +65,11 @@ function GM:PlayerSpawn(ply)
 		hook.Call("PlayerSetModel", GAMEMODE, ply)
 	end
 
-	ply:SetJumpPower(0)
+	-- jump power
+	if not GAMEMODE.jumpable then
+		ply:SetJumpPower(0)
+	end
+
 	ply:SetWalkSpeed(300)
 	ply:SetRunSpeed(300)
 
@@ -127,7 +131,6 @@ end
 
 -- spawns a virus
 function GM:VirusSpawn(ply)
-	ply:Give("weapon_9mm")
 	local numVirus = game.GetWorld().NumVirus
 
 	local healthScale = math.Clamp(15 * (#player.GetAll() / numVirus) + 30, 50, 100)
@@ -140,6 +143,7 @@ function GM:VirusSpawn(ply)
 	ply:SetHealth(healthScale)
 	ply.MaxHealth = healthScale
 
+	-- here we can give  weapon and ammo
 	ply:StripWeapons()
 	ply:RemoveAllAmmo()
 

@@ -42,6 +42,12 @@ GM.NumWaitingForInfection = 8
 GM.NumRoundMusic = 5
 GM.NumLastAlive = 2
 
+-- modifiers
+GM.zombiesWithGuns = false
+GM.playerGuns = {true, true, true, true}
+GM.zombieGuns = {false, false, false, false}
+GM.jumpable = false
+
 GM.HasLastSurvivor = false
 
 local VirusColor = Color(155, 200, 160, 255)

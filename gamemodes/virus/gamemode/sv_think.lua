@@ -67,7 +67,7 @@ function GM:PlayerThink(ply)
 	end
 
 	-- no weapons, not virus, then give weapons
-	if (#ply:GetWeapons() == 0 and CurTime() > ply.NextWeaponThink and not ply.IsVirus) then
+	if (#ply:GetWeapons() == 0 and CurTime() > ply.NextWeaponThink) then
 		hook.Call("PlayerLoadout", GAMEMODE, ply)
 		ply.NextWeaponThink = CurTime() + 2
 	end
@@ -114,12 +114,13 @@ function GM:VirusThink(ply)
 		return
 	end -- MAC YOU STUPID RETARD
 
-	-- TODO
-	ply:StripWeapons()
-	ply:RemoveAllAmmo()
-
 	if (game.GetWorld().State ~= STATUS_PLAYING) then
 		return
+	end
+
+	if (#ply:GetWeapons() == 0 and CurTime() > ply.NextWeaponThink) then
+		hook.Call("PlayerLoadout", GAMEMODE, ply)
+		ply.NextWeaponThink = CurTime() + 2
 	end
 
 	if ply.Flame ~= nil then
@@ -148,7 +149,7 @@ function GM:VirusThink(ply)
 				v:SetRunSpeed(500)
 			end
 		end
-	elseif game.GetWorld().NumVirus >= 2 then
+	elseif game.GetWorld().NumVirus > 1 then
 		for _, v in ipairs(player.GetAll()) do
 			if v.IsVirus or v.enraged then
 				v.enraged = false

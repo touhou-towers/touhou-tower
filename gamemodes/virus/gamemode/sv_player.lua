@@ -127,7 +127,7 @@ end
 
 -- actually adds guns to players
 function GM:PlayerLoadout(ply)
-	for _, v in ipairs(self:GetSelectedWeapons()) do
+	for _, v in ipairs(self:GetSelectedWeapons(ply)) do
 		ply:Give(v)
 	end
 

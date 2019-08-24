@@ -42,10 +42,11 @@ function GM:EntityTakeDamage(target, dmginfo)
 	if target:IsPlayer() then
 		if dmginfo:IsFallDamage() then
 			dmginfo:ScaleDamage(0)
-		end
-
-		if dmginfo:IsExplosionDamage() and not target.IsVirus then
+		elseif dmginfo:IsExplosionDamage() and not target.IsVirus then
 			dmginfo:ScaleDamage(0)
+		else
+			-- players now take 30% damage (from viruses when they get guns)
+			dmginfo:ScaleDamage(0.2)
 		end
 	end
 end
