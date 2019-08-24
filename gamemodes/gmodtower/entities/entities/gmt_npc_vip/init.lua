@@ -25,7 +25,7 @@ function ENT:AcceptInput(name, activator, ply)
 		timer.Simple(
 			0.0,
 			function()
-				if notply:GetNWBool("VIP") then
+				if not ply:GetNWBool("VIP") then
 					ply:SendLua([[Msg2("Please buy VIP to access this store!")]])
 					return
 				end
