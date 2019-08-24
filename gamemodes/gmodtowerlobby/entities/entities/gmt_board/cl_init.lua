@@ -1,20 +1,26 @@
-include('shared.lua')
+include("shared.lua")
 
 ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
 
-surface.CreateFont( "SmallHeaderFont", {
-	font      = "Bebas Neue",
-	size      = 48,
-	weight    = 700,
-	antialias = true
-})
+surface.CreateFont(
+	"SmallHeaderFont",
+	{
+		font = "Bebas Neue",
+		size = 48,
+		weight = 700,
+		antialias = true
+	}
+)
 
-surface.CreateFont( "SelectMapFont", {
-	font      = "Bebas Neue",
-	size      = 100,
-	weight    = 700,
-	antialias = true
-})
+surface.CreateFont(
+	"SelectMapFont",
+	{
+		font = "Bebas Neue",
+		size = 100,
+		weight = 700,
+		antialias = true
+	}
+)
 
 local donationFeatures = {
 	"A fancy donor tag",
@@ -27,7 +33,7 @@ local donationFeatures = {
 	--"Forum signature",
 	"AFK kick delay doubled",
 	--"Suite entity limit raised to 150 ← NEW!",
-	"Our eternal love ♥ ",
+	"Our eternal love ♥ "
 	--"And more!"
 }
 
@@ -42,7 +48,7 @@ local rules = {
 	"Scripting binds",
 	"Adding sexually explict videos to Theater",
 	"Sexually explicit sprays",
-	"Asking for Lua Code",
+	"Asking for Lua Code"
 }
 
 local content = {
@@ -59,238 +65,232 @@ local BoardWidth = 580
 local BoardHeight = 700
 
 function ENT:Initialize()
-
 	--self:SharedInit()
 
 	local min, max = self:GetRenderBounds()
-	self:SetRenderBounds( min * 1.0, max * 1.0 )
-
+	self:SetRenderBounds(min * 1.0, max * 1.0)
 end
 
 function ENT:DrawTranslucent()
-
-	//self:DrawModel()
+	-- self:DrawModel()
 
 	local ang = self:GetAngles()
-	ang:RotateAroundAxis( ang:Up(), 90 )
-	ang:RotateAroundAxis( ang:Forward(), 90 )
+	ang:RotateAroundAxis(ang:Up(), 90)
+	ang:RotateAroundAxis(ang:Forward(), 90)
 
-	local pos = self:GetPos() + ( self:GetUp() * OffsetUp ) + ( self:GetForward() * OffsetForward ) + ( self:GetRight() * OffsetRight )
-	pos = pos + ( self:GetRight() * ( math.sin( CurTime() ) * .5 ) )
+	local pos =
+		self:GetPos() + (self:GetUp() * OffsetUp) + (self:GetForward() * OffsetForward) + (self:GetRight() * OffsetRight)
+	pos = pos + (self:GetRight() * (math.sin(CurTime()) * .5))
 
-	if ( LocalPlayer():EyePos() - pos ):DotProduct( ang:Up() ) < 0 then
+	if (LocalPlayer():EyePos() - pos):DotProduct(ang:Up()) < 0 then
+		ang:RotateAroundAxis(ang:Right(), 180)
 
-		ang:RotateAroundAxis( ang:Right(), 180 )
-
-		pos = pos + self:GetRight() * -( OffsetRight * 2 )
+		pos = pos + self:GetRight() * -(OffsetRight * 2)
 
 		if self:GetSkin() == 4 then
-
-			pos = pos + self:GetRight() * -( OffsetRight / 2 )
-
+			pos = pos + self:GetRight() * -(OffsetRight / 2)
 		end
-
 	end
 
-	cam.Start3D2D( pos, ang, .15 )
-		self:DrawMain()
+	cam.Start3D2D(pos, ang, .15)
+	self:DrawMain()
 	cam.End3D2D()
-
 end
 
 function ENT:DrawMain()
+	-- surface.SetDrawColor( 255, 0, 255 )
+	-- surface.DrawRect( 0, 0, BoardWidth, BoardHeight )
 
-	//surface.SetDrawColor( 255, 0, 255 )
-	//surface.DrawRect( 0, 0, BoardWidth, BoardHeight )
+	-- Custom messages
 
-	// Custom messages
-
-	if self.Text && self.Text != "" then
-
-		local lines = string.Split( self.Text, '|' )
+	if self.Text and self.Text ~= "" then
+		local lines = string.Split(self.Text, "|")
 		local curX = 50
 
-		for _, text in pairs( lines ) do
-
-			draw.SimpleText( text, "SelectMapFont", 50, curX, Color(255,255,255), TEXT_ALIGN_LEFT )
+		for _, text in pairs(lines) do
+			draw.SimpleText(text, "SelectMapFont", 50, curX, Color(255, 255, 255), TEXT_ALIGN_LEFT)
 
 			curX = curX + 70
-
 		end
 
 		return
-
 	end
 
-	// Donation!
+	-- Donation!
 
 	if self:GetSkin() == 1 then
-
-		// Player donated!
+		-- Player donated!
 
 		--if LocalPlayer().IsVIP && LocalPlayer():IsVIP() then
 		if LocalPlayer():GetNWBool("VIP") == true then
+			draw.SimpleText(
+				"Welcome to Touhou Towers",
+				"SmallHeaderFont",
+				30,
+				300,
+				Color(255, 255, 255),
+				TEXT_ALIGN_LEFT
+			)
+			draw.SimpleText(
+				"Join our discord at https://discordapp.com/invite/fryPWwR",
+				"SmallHeaderFont",
+				30,
+				300,
+				Color(255, 255, 255),
+				TEXT_ALIGN_LEFT
+			)
 
-			draw.SimpleText( "THANK YOU FOR BUYING TOWER UNITE!", "SelectMapFont", 0, 0, Color(255,255,255), TEXT_ALIGN_LEFT )
-			draw.SimpleText( "by the way...", "SelectMapFont", 0, 70, Color(255,255,255), TEXT_ALIGN_LEFT )
-
-			--draw.SimpleText( "You can press E on this open the VIP forums", "SmallHeaderFont", 30, 300, Color(255,255,255), TEXT_ALIGN_LEFT )
-
-			draw.SimpleText( "You're awesome ♥ ", "SmallHeaderFont", 30, 180, Color(255,255,255), TEXT_ALIGN_LEFT )
+			draw.SimpleText("You're awesome ♥ ", "SmallHeaderFont", 30, 180, Color(255, 255, 255), TEXT_ALIGN_LEFT)
 
 			return
-
 		end
 
-		// Advertise donating
+		-- Advertise donating
+		-- TODO: update this
 
-		draw.SimpleText( "BUY TOWER UNITE TODAY!", "SelectMapFont", 0, 0, Color(255,255,255), TEXT_ALIGN_LEFT )
-		draw.SimpleText( "and get...", "SelectMapFont", 0, 65, Color(255,255,255), TEXT_ALIGN_LEFT )
+		draw.SimpleText("BUY TOWER UNITE TODAY!", "SelectMapFont", 0, 0, Color(255, 255, 255), TEXT_ALIGN_LEFT)
+		draw.SimpleText("and get...", "SelectMapFont", 0, 65, Color(255, 255, 255), TEXT_ALIGN_LEFT)
 
 		local curX = 65 + 80
 
-		for _, feature in ipairs( donationFeatures ) do
-
-			draw.SimpleText( "• " .. feature, "SmallHeaderFont", 30, curX, Color(255,255,255), TEXT_ALIGN_LEFT )
+		for _, feature in ipairs(donationFeatures) do
+			draw.SimpleText("• " .. feature, "SmallHeaderFont", 30, curX, Color(255, 255, 255), TEXT_ALIGN_LEFT)
 			curX = curX + 35
-
 		end
 
-		draw.SimpleText( "Press E on this to buy Tower Unite!", "SelectMapFont", 0, curX + 30, Color(255,255,255), TEXT_ALIGN_LEFT )
-
+		draw.SimpleText(
+			"Press E on this to buy Tower Unite!",
+			"SelectMapFont",
+			0,
+			curX + 30,
+			Color(255, 255, 255),
+			TEXT_ALIGN_LEFT
+		)
 	end
 
-	// Direction to pool/lobby
+	-- Direction to pool/lobby
 
 	if self:GetSkin() == 2 then
-
-		draw.SimpleText( "← lobby", "SelectMapFont", 160, 240, Color(255,255,255), TEXT_ALIGN_LEFT )
-		draw.SimpleText( "pool →", "SelectMapFont", 160, 310, Color(255,255,255), TEXT_ALIGN_LEFT )
-
+		draw.SimpleText("← lobby", "SelectMapFont", 160, 240, Color(255, 255, 255), TEXT_ALIGN_LEFT)
+		draw.SimpleText("pool →", "SelectMapFont", 160, 310, Color(255, 255, 255), TEXT_ALIGN_LEFT)
 	end
 
-	// Direction to pool/lobby
+	-- Direction to pool/lobby
 
 	if self:GetSkin() == 3 then
-
-		draw.SimpleText( "lobby →", "SelectMapFont", 160, 240, Color(255,255,255), TEXT_ALIGN_LEFT )
-		draw.SimpleText( "← pool", "SelectMapFont", 160, 310, Color(255,255,255), TEXT_ALIGN_LEFT )
-
+		draw.SimpleText("lobby →", "SelectMapFont", 160, 240, Color(255, 255, 255), TEXT_ALIGN_LEFT)
+		draw.SimpleText("← pool", "SelectMapFont", 160, 310, Color(255, 255, 255), TEXT_ALIGN_LEFT)
 	end
 
-	// Rules
+	-- Rules
 
 	if self:GetSkin() == 4 then
-
-		draw.SimpleText( "RULES", "SelectMapFont", 200, 0, Color(255,255,255), TEXT_ALIGN_LEFT )
+		draw.SimpleText("RULES", "SelectMapFont", 200, 0, Color(255, 255, 255), TEXT_ALIGN_LEFT)
 
 		local curX = 100
 
-		for _, rule in ipairs( rules ) do
-
-			draw.SimpleText( "• No " .. rule, "SmallHeaderFont", 0, curX, Color(255,255,255), TEXT_ALIGN_LEFT )
+		for _, rule in ipairs(rules) do
+			draw.SimpleText("• No " .. rule, "SmallHeaderFont", 0, curX, Color(255, 255, 255), TEXT_ALIGN_LEFT)
 
 			curX = curX + 35
-
 		end
-
 	end
-	
-	// Missing Content
-	
+
+	-- Missing Content
+
 	if self:GetSkin() == 5 then
-	
-		draw.SimpleText( "DOWNLOAD CONTENT", "SelectMapFont", 200, 0, Color(255,255,255), TEXT_ALIGN_LEFT )
+		draw.SimpleText("DOWNLOAD CONTENT", "SelectMapFont", 200, 0, Color(255, 255, 255), TEXT_ALIGN_LEFT)
 
 		local curX = 100
-		for _, list in ipairs( content ) do
-
-			draw.SimpleText( list, "SmallHeaderFont", 475, curX, Color(255,255,255), TEXT_ALIGN_CENTER )
+		for _, list in ipairs(content) do
+			draw.SimpleText(list, "SmallHeaderFont", 475, curX, Color(255, 255, 255), TEXT_ALIGN_CENTER)
 			curX = curX + 35
-
 		end
-	
 	end
 
-	// Welcome Board
-	
+	-- Welcome Board
+
 	if self:GetSkin() == 6 then
-	
-		draw.SimpleText( "GMT'S 10TH ANNIVERSARY!", "GTowerSkyMsgHuge", 200, 0, Color(255,255,255), TEXT_ALIGN_CENTER )
-	
+		draw.SimpleText("GMT'S 10TH ANNIVERSARY!", "GTowerSkyMsgHuge", 200, 0, Color(255, 255, 255), TEXT_ALIGN_CENTER)
 	end
-	
 end
 
-net.Receive( "OpenDonation", function( len, pl )
+-- well no reason to change this stuff for now since i removed the hook
+-- well i could just remove it entirely
+net.Receive(
+	"OpenDonation",
+	function(len, pl)
+		local url
 
-	local url
+		Donation = vgui.Create("DFrame")
+		Donation:SetSize(ScrW(), ScrH())
+		Donation:Center()
+		Donation:SetDraggable(false)
+		Donation:MakePopup()
 
-	Donation = vgui.Create("DFrame")
-	Donation:SetSize(ScrW(), ScrH())
-	Donation:Center()
-	Donation:SetDraggable(false)
-	Donation:MakePopup()
-	
-	if LocalPlayer():GetNWBool("VIP") != true then
-		Donation:SetTitle("Tower Unite")
-		url = "https://store.steampowered.com/app/394690/Tower_Unite/"
+		if LocalPlayer():GetNWBool("VIP") ~= true then
+			Donation:SetTitle("Tower Unite")
+			url = "https://store.steampowered.com/app/394690/Tower_Unite/"
+		end
+
+		Donation.btnMaxim:Hide()
+		Donation.btnMinim:Hide()
+		Donation.Paint = function(self, w, h)
+			draw.RoundedBox(0, 0, 0, w, h, Color(0, 80, 161))
+			draw.RoundedBox(0, 0, 0, w, 25, Color(0, 65, 129))
+		end
+
+		local OpenDonation = vgui.Create("DHTML", Donation)
+		OpenDonation:Center()
+		OpenDonation:Dock(FILL)
+		function OpenDonation:ConsoleMessage(msg)
+		end
+
+		local ctrls = vgui.Create("DHTMLControls", Donation) -- Navigation controls
+		ctrls:SetWide(750)
+		ctrls:SetPos(0, -50)
+		ctrls:SetHTML(OpenDonation) -- Links the controls to the DHTML window
+		ctrls.AddressBar:SetText(url) -- Address bar isn't updated automatically
+		OpenDonation:MoveBelow(ctrls) -- Align the window to sit below the controls
+		OpenDonation:OpenURL(url)
 	end
-	
-	Donation.btnMaxim:Hide()
-	Donation.btnMinim:Hide()
-	Donation.Paint = function(self, w, h)
-	draw.RoundedBox(0,0,0,w,h,Color(0,80,161))
-	draw.RoundedBox(0,0,0,w,25,Color(0,65,129))
+)
+
+net.Receive(
+	"OpenDownload",
+	function()
+		gui.OpenURL("http://tinyurl.com/gmtcontent")
 	end
-	
-	local OpenDonation = vgui.Create("DHTML", Donation)
-	OpenDonation:Center()
-	OpenDonation:Dock( FILL )
-	function OpenDonation:ConsoleMessage( msg ) end
+)
 
-	local ctrls = vgui.Create( "DHTMLControls", Donation ) -- Navigation controls
-	ctrls:SetWide( 750 )
-	ctrls:SetPos( 0, -50 )
-	ctrls:SetHTML( OpenDonation ) -- Links the controls to the DHTML window
-	ctrls.AddressBar:SetText(url) -- Address bar isn't updated automatically
-	OpenDonation:MoveBelow( ctrls ) -- Align the window to sit below the controls
-	OpenDonation:OpenURL(url)
-	
-end)
+usermessage.Hook(
+	"OpenDonation",
+	function(um)
+		local URL = "http://www.gmtower.org/index.php?p=donations&app=1&hide=1&si=" .. LocalPlayer():SteamID()
+		local Title = "Donate"
 
-net.Receive( "OpenDownload", function()
+		if LocalPlayer().IsVIP and LocalPlayer():IsVIP() then
+			URL = "http://www.gmtower.org/forums/index.php?board=14.0"
+			Title = "VIP Forums"
+		end
 
-	gui.OpenURL( "http://tinyurl.com/gmtcontent" )
-	
-end ) 
-
-usermessage.Hook( "OpenDonation", function( um ) 
-
-	local URL = "http://www.gmtower.org/index.php?p=donations&app=1&hide=1&si=" .. LocalPlayer():SteamID()
-	local Title = "Donate"
-
-	if LocalPlayer().IsVIP && LocalPlayer():IsVIP() then
-
-		URL = "http://www.gmtower.org/forums/index.php?board=14.0"
-		Title = "VIP Forums"
-
+		browser.OpenURL(URL, Title)
 	end
+)
 
-	browser.OpenURL( URL, Title )
+usermessage.Hook(
+	"OpenSetBoard",
+	function(um)
+		local entid = um:ReadShort()
+		local board = ents.GetByIndex(entid)
 
-end )
-
-usermessage.Hook( "OpenSetBoard", function( um ) 
-
-	local entid = um:ReadShort()
-	local board = ents.GetByIndex( entid )
-
-	Derma_StringRequest(
-		"Set Board",
-		"Set the text of this board",
-		board.Text or "",
-		function(text) RunConsoleCommand( "gmt_setboard", entid, text ) end
-	)
-
-end )
+		Derma_StringRequest(
+			"Set Board",
+			"Set the text of this board",
+			board.Text or "",
+			function(text)
+				RunConsoleCommand("gmt_setboard", entid, text)
+			end
+		)
+	end
+)

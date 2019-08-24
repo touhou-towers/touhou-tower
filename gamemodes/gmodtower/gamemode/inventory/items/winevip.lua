@@ -1,6 +1,5 @@
-
 ITEM.Name = "VIP Wine"
-ITEM.Description = "The VIP Wine, also known as the Gift Basket, get unlimited beer for supporting Tower Unite!"
+ITEM.Description = "The VIP Wine, also known as the Gift Basket, get unlimited beer for VIPs!"
 ITEM.Model = "models/gmod_tower/winebasket.mdl"
 ITEM.ClassName = "gmt_winevip"
 ITEM.UniqueInventory = true
