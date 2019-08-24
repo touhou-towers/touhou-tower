@@ -1,215 +1,189 @@
-
 function GM:Think()
-
 	game.GetWorld():SetNWFloat("State", game.GetWorld().State)
 	game.GetWorld():SetNWFloat("SetTime", game.GetWorld().SetTime)
 	game.GetWorld():SetNWFloat("Time", game.GetWorld().Time)
 	game.GetWorld():SetNWFloat("Round", game.GetWorld().Round)
 	game.GetWorld():SetNWFloat("MaxRounds", game.GetWorld().MaxRounds)
 
-	for _, v in ipairs( player.GetAll() ) do
-		
+	for _, v in ipairs(player.GetAll()) do
 		if v.IsVirus then
-			self:VirusThink( v )
+			self:VirusThink(v)
 		else
-			self:PlayerThink( v )
+			self:PlayerThink(v)
 		end
-	
 	end
-	
-	if ( CurTime() >= self.NextRankThink ) then
-	
-		for _, v in ipairs( player.GetAll() ) do
-			self:RankThink( v )
+
+	if (CurTime() >= self.NextRankThink) then
+		for _, v in ipairs(player.GetAll()) do
+			self:RankThink(v)
 		end
-		
+
 		self.NextRankThink = CurTime() + 2
 	end
 
-
 	self:MapThink()
-	
 end
 
-function GM:PlayerDeathThink( ply )
+function GM:PlayerDeathThink(ply)
+	if not IsValid(ply) then
+		return
+	end
 
-	if !IsValid( ply ) then return end
-	
 	if CurTime() > ply.RespawnTime then
 		ply:Spawn()
 	end
 end
 
-
-// map specific logic
 function GM:MapThink()
-
-	if ( CurTime() >= self.NextMapThink ) then
-
+	if (CurTime() >= self.NextMapThink) then
 		local mapName = game.GetMap()
 
-		//sewage water kill (for survivors)
+		-- sewage water kill (for survivors)
 		if mapName == "gmt_virus_sewage01" then
-		
-			for _, v in ipairs( player.GetAll() ) do
+			for _, v in ipairs(player.GetAll()) do
+				if v:WaterLevel() ~= 0 then
+					if not v:Alive() then
+						return
+					end
 
-				if v:WaterLevel() != 0 then
-					if !v:Alive() then return end
-			
-					if v:IsPlayer() && v:Alive() then
+					if v:IsPlayer() and v:Alive() then
 						v:Kill()
 					end
 				end
-				
 			end
-
 		end
-
 		self.NextMapThink = CurTime() + 0.1
-
 	end
-
 end
 
-function GM:PlayerThink( ply )
+function GM:PlayerThink(ply)
+	if (not IsValid(ply) or not ply:Alive()) then
+		return
+	end -- MAC YOU STUPID RETARD
 
-	if ( !IsValid( ply ) || !ply:Alive() ) then return end  // MAC YOU STUPID RETARD
-	
 	if game.GetWorld().State == STATUS_WAITING then
-		ply:CrosshairDisable() //JESUS FUCK DISABLE THE GOD DAMN CROSSHAIR
+		ply:CrosshairDisable() -- JESUS FUCK DISABLE THE GOD DAMN CROSSHAIR
+		return
 	end
-	
-	if game.GetWorld().State == STATUS_WAITING then return end
-	
-	if ( #ply:GetWeapons() == 0 && CurTime() > ply.NextWeaponThink && !ply.IsVirus ) then
-		hook.Call( "PlayerLoadout", GAMEMODE, ply )
+
+	-- no weapons, not virus, then give weapons
+	if (#ply:GetWeapons() == 0 and CurTime() > ply.NextWeaponThink and not ply.IsVirus) then
+		hook.Call("PlayerLoadout", GAMEMODE, ply)
 		ply.NextWeaponThink = CurTime() + 2
 	end
-	
-	if game.GetWorld().State != STATUS_PLAYING then return end
 
-	for _,v in ipairs( player.GetAll() ) do
+	if game.GetWorld().State ~= STATUS_PLAYING then
+		return
+	end
 
-		if ( v == ply || !v:Alive() || !v.IsVirus ) then return end
+	for _, v in ipairs(player.GetAll()) do
+		if (v == ply or not v:Alive() or not v.IsVirus) then
+			return
+		end
 
-		local dist = ply:GetPos():Distance( v:GetPos() )
-		//ply:ChatPrint( tostring(v) .. "| Dist: " .. tostring(dist) )
+		local dist = ply:GetPos():Distance(v:GetPos())
+		-- ply:ChatPrint( tostring(v) .. "| Dist: " .. tostring(dist) )
 
-		local rad = 950  //start kicking in they're fucking close
+		local rad = 950 -- start kicking in they're fucking close
 		local scale_mod = 0.5
 
 		if dist < rad then
-			if dist < ( rad / 2 ) then
-				scale_mod = 0.15  //freak the hug out
+			if dist < (rad / 2) then
+				scale_mod = 0.15 -- freak the hug out
 			end
 
-			local scale = ( dist / rad ) * scale_mod
-			//ply:ChatPrint( tostring(v) .. "| Scale: " .. tostring(scale) )
+			local scale = (dist / rad) * scale_mod
+			-- ply:ChatPrint( tostring(v) .. "| Scale: " .. tostring(scale) )
 
-			if ( ply.NextRadSound or 0 ) < CurTime() then
-
+			if (ply.NextRadSound or 0) < CurTime() then
 				ply.NextRadSound = CurTime() + scale
 
-				local ran = math.random( 1, 2 )
+				local ran = math.random(1, 2)
 				if ran == 1 then
-					ply:EmitSound( "Geiger.BeepLow", 50, math.random( 90, 110 ) )
+					ply:EmitSound("Geiger.BeepLow", 50, math.random(90, 110))
 				else
-					ply:EmitSound( "Geiger.BeepHigh", 50, math.random( 90, 110 ) )
+					ply:EmitSound("Geiger.BeepHigh", 50, math.random(90, 110))
 				end
-
 			end
-
 		end
 	end
-
 end
 
-function GM:VirusThink( ply ) 
+function GM:VirusThink(ply)
+	if (not IsValid(ply) or not ply:Alive()) then
+		return
+	end -- MAC YOU STUPID RETARD
 
-	if ( !IsValid( ply ) || !ply:Alive() ) then return end  // MAC YOU STUPID RETARD
-	
+	-- TODO
 	ply:StripWeapons()
 	ply:RemoveAllAmmo()
 
-	if ( game.GetWorld().State != STATUS_PLAYING ) then return end
-	
-	if ply.Flame != nil then
-		local objs = ents.FindInSphere( ply:GetPos() + Vector( 0, 0, 40 ), 40 )
+	if (game.GetWorld().State ~= STATUS_PLAYING) then
+		return
+	end
 
-		if ( ply:GetVelocity():Length() <= 0 ) then return end  //standing still fuckers
-		
-		for _, v in ipairs( objs ) do
-			if ( IsValid( v ) && v:IsPlayer() && !v.IsVirus ) then	
-				self:Infect( v, ply )
+	if ply.Flame ~= nil then
+		local objs = ents.FindInSphere(ply:GetPos() + Vector(0, 0, 40), 40)
+
+		if (ply:GetVelocity():Length() <= 0) then
+			return
+		end -- standing still fuckers
+
+		for _, v in ipairs(objs) do
+			if (IsValid(v) and v:IsPlayer() and not v.IsVirus) then
+				self:Infect(v, ply)
 			end
 		end
 	end
-	
-	if game.GetWorld().NumVirus == 1 then 
-		
-		for k,v in pairs(player.GetAll()) do
-			if ( v.IsVirus && v:Deaths() >= 2 && v.enraged != true ) then
-				
+
+	if game.GetWorld().NumVirus == 1 then
+		for k, v in pairs(player.GetAll()) do
+			if (v.IsVirus and v:Deaths() >= 2 and not v.enraged) then
 				v.enraged = true
-				
-				v:SetWalkSpeed( 500 )
-				v:SetRunSpeed( 500 )
-				
-			elseif v.enraged == true then
-			
-				v:SetWalkSpeed( 500 )
-				v:SetRunSpeed( 500 )
-				
-			end
-		end
-		
-	elseif game.GetWorld().NumVirus >= 2 then
-		
-		for _, v in ipairs( player.GetAll() ) do
-			if v.IsVirus || v.enraged == true then
-				
-				v.enraged = false
-				v:SetWalkSpeed( self.VirusSpeed )
-				v:SetRunSpeed( self.VirusSpeed )
-				
-			end
-		end
-		
-	end
 
+				v:SetWalkSpeed(500)
+				v:SetRunSpeed(500)
+			elseif v.enraged == true then
+				v:SetWalkSpeed(500)
+				v:SetRunSpeed(500)
+			end
+		end
+	elseif game.GetWorld().NumVirus >= 2 then
+		for _, v in ipairs(player.GetAll()) do
+			if v.IsVirus or v.enraged then
+				v.enraged = false
+				v:SetWalkSpeed(self.VirusSpeed)
+				v:SetRunSpeed(self.VirusSpeed)
+			end
+		end
+	end
 end
 
-function GM:RankThink( ply, force )
-
+function GM:RankThink(ply, force)
 	local rank = 1
-	
-	for _, v in ipairs( player.GetAll() ) do
-		if self:ShouldCalcRank( ply, v ) || force then
-		
-			if ( v:Frags() > ply:Frags() ) then
-			
+
+	for _, v in ipairs(player.GetAll()) do
+		if self:ShouldCalcRank(ply, v) or force then
+			if (v:Frags() > ply:Frags()) then
 				rank = rank + 1
-				
-			elseif ( v:Frags() == ply:Frags() ) then
-				if ( v:Deaths() < ply:Deaths() ) then
-				
+			elseif (v:Frags() == ply:Frags()) then
+				if (v:Deaths() < ply:Deaths()) then
 					rank = rank + 1
-					
 				end
 			end
-			
 		end
 	end
-	
+
 	ply.Rank = rank
-	
 end
 
-function GM:ShouldCalcRank( forPlayer, comparePlayer )
+function GM:ShouldCalcRank(forPlayer, comparePlayer)
+	if not (IsValid(forPlayer) and IsValid(comparePlayer)) then
+		return false
+	end
+	if (forPlayer == comparePlayer) then
+		return false
+	end
 
-	if !( IsValid( forPlayer ) && IsValid( comparePlayer ) ) then return false end
-	if ( forPlayer == comparePlayer ) then return false end
-	
 	return true
-	
 end
