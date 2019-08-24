@@ -1,4 +1,5 @@
-local preserve = {"player",
+local preserve = {
+	"player",
 	--"viewmodel",
 	"worldspawn",
 	"predicted_viewmodel",
@@ -35,7 +36,7 @@ local preserve = {"player",
 -- a clone for some reason?
 local preservegame = {}
 
-for k,v in ipairs(preserve) do
+for k, v in ipairs(preserve) do
 	table.insert(preservegame, v)
 end
 

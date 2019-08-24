@@ -1,4 +1,4 @@
-NiceMapNames={
+NiceMapNames = {
 	["gmt_ballracer_grassworld01"] = "Grass World",
 	["gmt_ballracer_iceworld03"] = "Ice World",
 	["gmt_ballracer_khromidro02"] = "Khromidro",
@@ -19,6 +19,6 @@ NiceMapNames={
 }
 
 function GetNiceMapName(map)
-	local map = map or game.GetMap();
+	local map = map or game.GetMap()
 	return NiceMapNames[map] or map
 end

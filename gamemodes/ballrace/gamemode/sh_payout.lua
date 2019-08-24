@@ -21,7 +21,7 @@ Payouts = {
 		Name = "Didn't Die",
 		Desc = "You didn't die!",
 		GMC = 25,
-		Diff = 1,
+		Diff = 1
 	},
 	Button = {
 		Name = "Team Player",
@@ -54,36 +54,38 @@ for k, v in pairs(Payouts) do
 end
 
 function GM:GiveMoney()
-	if CLIENT then return end
+	if CLIENT then
+		return
+	end
 
 	for _, ply in pairs(player.GetAll()) do
-		if ply.AFK then continue end
+		if not ply.AFK then
+			payout.Clear(ply)
+			local placement = ply:GetNWInt("Placement")
 
-		payout.Clear(ply)
-		local placement = ply:GetNWInt("Placement")
+			if ply:Team() == TEAM_COMPLETED then
+				payout.Give(ply, "Completed")
+			end
 
-		if ply:Team() == TEAM_COMPLETED then
-			payout.Give(ply, "Completed")
+			if not ply:GetNWBool("Died") then
+				payout.Give(ply, "NoDie")
+			end
+
+			if ply:GetNWBool("PressedButton") then
+				payout.Give(ply, "Button")
+			end
+
+			-- rank
+			if Payouts["Rank" .. placement] then
+				payout.Give(ply, "Rank" .. placement)
+			end
+
+			-- frags here are bananas
+			if ply:Frags() > 0 then
+				payout.Give(ply, "Collected", ply:Frags() * 3)
+			end
+
+			payout.Payout(ply)
 		end
-
-		if !ply:GetNWBool("Died") then
-			payout.Give(ply, "NoDie")
-		end
-
-		if ply:GetNWBool("PressedButton") then
-			payout.Give(ply, "Button")
-		end
-
-		-- rank
-		if  Payouts["Rank" .. placement] then
-			payout.Give(ply, "Rank" .. placement)
-		end
-
-		-- frags here are bananas
-		if ply:Frags() > 0 then
-			payout.Give( ply, "Collected", ply:Frags() * 3 )
-		end
-
-		payout.Payout( ply )
 	end
 end

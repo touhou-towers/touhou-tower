@@ -3,18 +3,18 @@ function GM:EndServer()
 	GTowerServers:EmptyServer()
 
 	--timer.Simple( 2.5, ChangeLevel, GTowerServers:GetRandomMap() or GAMEMODE:RandomMap( "gmt_ballracer" ) )
-	timer.Simple(2.5, function()
+	timer.Simple(
+		2.5,
+		function()
+			local map = (GTowerServers:GetRandomMap() or GAMEMODE:RandomMap("gmt_ballracer"))
 
-		local map = (GTowerServers:GetRandomMap() or GAMEMODE:RandomMap( "gmt_ballracer" ))
-		
-		-- not sure where this event name comes from
-		hook.Call("LastChanceMapChange", GAMEMODE, map)
-		RunConsoleCommand("changelevel", map)
+			-- not sure where this event name comes from
+			hook.Call("LastChanceMapChange", GAMEMODE, map)
+			RunConsoleCommand("changelevel", map)
+		end
+	)
 
-	end)
-
-	Msg( " !! You are all dead !!\n" )
-
+	Msg(" !! You are all dead !!\n")
 end
 
 function GM:EnterPlayingState()
@@ -22,5 +22,5 @@ function GM:EnterPlayingState()
 		self:AdvanceLevelStatus()
 	end
 
-	self:SetState( 2 )
+	self:SetState(2)
 end

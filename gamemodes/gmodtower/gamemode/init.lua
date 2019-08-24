@@ -333,8 +333,8 @@ hook.Add("CanPlayerUnfreeze", "GMTOnPhysgunReload", function(ply, ent, physObj)
 end)
 
 function GM:Initialize()
-    --SetIfDefault( "sv_loadingurl", LOADING_URL ) Let's force it instead
-		RunConsoleCommand( "sv_loadingurl", "http://gmodtower.org/loading/?mapname=%m&steamid=%s" )
+	--SetIfDefault( "sv_loadingurl", LOADING_URL ) Let's force it instead
+		RunConsoleCommand( "sv_loadingurl", "https://cdn.discordapp.com/attachments/614898416321036329/614900786308317184/unknown.png" )
 end
 
 function GM:CheckPassword(steam, IP, sv_pass, cl_pass, name)
