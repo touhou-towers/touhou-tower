@@ -2,6 +2,16 @@ GM.DefaultDayTime = 120
 GM.MaxDaysPerGame = 7
 GM.GameStarted = false
 
+-- probably should move this somewhere
+local function everyoneReady()
+	for _, ply in ipairs(players.GetAll()) do
+		if not ply:GetNWBool("Upgraded") then
+			return false
+		end
+	end
+	return true
+end
+
 function GM:Think()
 	for k, v in pairs(player.GetAll()) do
 		if v:GetNWInt("Combo") > 0 then
@@ -46,17 +56,7 @@ function GM:Think()
 			ply:StripAllInventory()
 		end
 	elseif self:GetState() == STATE_UPGRADING then
-		-- probably should move this somewhere
-		local function everyoneReady()
-			for _, ply in ipairs(players.GetAll()) do
-				if not ply.GetNWBool("Upgraded") then
-					return false
-				end
-			end
-			return true
-		end
-
-		if self:GetTimeLeft() <= 0 or everyoneIsReady() then
+		if self:GetTimeLeft() <= 0 or everyoneReady() then
 			for _, ply in ipairs(player.GetAll()) do
 				ply:Freeze(false)
 				ply:Spawn()
@@ -97,18 +97,17 @@ function GM:Think()
 				--end
 				end
 			end
+			umsg.Start("ZMClassSelector")
+			umsg.Bool(false)
+			umsg.End()
+
+			umsg.Start("ZMPlayMusic")
+			umsg.Char(3)
+			umsg.End()
+
+			self:SetState(STATE_WARMUP)
+			SetGlobalInt("ZMDayTime", CurTime() + 8)
 		end
-
-		umsg.Start("ZMClassSelector")
-		umsg.Bool(false)
-		umsg.End()
-
-		umsg.Start("ZMPlayMusic")
-		umsg.Char(3)
-		umsg.End()
-
-		self:SetState(STATE_WARMUP)
-		SetGlobalInt("ZMDayTime", CurTime() + 8)
 	elseif self:GetState() == STATE_WARMUP and self:GetTimeLeft() <= 0 then
 		if GetGlobalInt("Round") ~= 6 then
 			umsg.Start("ZMPlayMusic")
@@ -389,6 +388,7 @@ function GM:EndDay()
 		zom:Remove()
 	end
 
+	umsg.Start("ZMShowScores")
 	umsg.Bool(true)
 	umsg.End()
 end
