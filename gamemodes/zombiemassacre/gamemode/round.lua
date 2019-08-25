@@ -4,7 +4,7 @@ GM.GameStarted = false
 
 -- probably should move this somewhere
 local function everyoneReady()
-	for _, ply in ipairs(players.GetAll()) do
+	for _, ply in ipairs(player.GetAll()) do
 		if not ply:GetNWBool("Upgraded") then
 			return false
 		end
@@ -22,11 +22,11 @@ function GM:Think()
 	end
 
 	if self:GetState() == STATE_WAITING then
-		if self:GetTimeLeft() <= 0 or player.GetCount() >= GM.EXPECTED_PLAYER_COUNT then
+		if self:GetTimeLeft() <= 0 or player.GetCount() >= GAMEMODE.EXPECTED_PLAYER_COUNT then
 			-- only important on the first load, then we
 			-- dont care if someone hasnt loaded in
 			-- after the game starts
-			GM.EXPECTED_PLAYER_COUNT = 0
+			GAMEMODE.EXPECTED_PLAYER_COUNT = 100
 
 			self.BossRound = false
 			self.BossSpawned = false
@@ -60,6 +60,7 @@ function GM:Think()
 				ply:SetNWInt("Lives", 2)
 				ply:SetNWInt("Points", 0)
 				ply:StripAllInventory()
+				ply:SetNWBool("Upgraded", false)
 			end
 		end
 	elseif self:GetState() == STATE_UPGRADING then

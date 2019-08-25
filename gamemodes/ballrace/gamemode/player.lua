@@ -6,10 +6,10 @@ local firstPlayerConnectedAt = 0
 local function shouldIStartGame()
 	if GetState() == STATUS_WAITING then
 		local now = CurTime()
-		if player.GetCount() >= GM.EXPECTED_PLAYER_COUNT or now - firstPlayerConnectedAt >= GAMEMODE.IntermissionTime then
+		if player.GetCount() >= GAMEMODE.EXPECTED_PLAYER_COUNT or now - firstPlayerConnectedAt >= GAMEMODE.IntermissionTime then
 			-- unlike the other games, this isnt as important
 			-- to set but i'll do it anyways
-			GM.EXPECTED_PLAYER_COUNT = 0
+			GAMEMODE.EXPECTED_PLAYER_COUNT = 100
 			SetTime(now)
 			GAMEMODE.StartRound(GAMEMODE) -- idk
 		else
@@ -30,7 +30,7 @@ function GM:PlayerInitialSpawn(ply)
 
 	firstPlayerConnectedAt = CurTime()
 	-- if waiting and number of players is 1
-	if GetState() == STATUS_WAITING and #player.GetAll() == 1 then
+	if GetState() == STATUS_WAITING then
 		game.CleanUpMap()
 		self:Announce("You are the first to join, waiting for additional players!")
 		shouldIStartGame()
