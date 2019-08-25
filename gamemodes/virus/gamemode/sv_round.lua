@@ -30,10 +30,10 @@ function GM:StartRound()
 	if restriction > 0 and restriction < 5 then -- 1, 2, 3, 4
 		GAMEMODE.playerGuns[restriction] = false
 	end
-	-- 5% chance to make it snipers and tnt only
-	if restriction > 4 and restriction < 7 then -- 5, 6
+	-- 2.5% chance to make it snipers and tnt only
+	if restriction == 5 then -- 5, 6
 		GAMEMODE.playerGuns = {false, false, false, true}
-		GAMEMODE.HumanSpeed = 340 -- speed up humans for this modifier
+		GAMEMODE.HumanSpeed = 500 -- speed up humans for this modifier
 	end
 
 	-- 50% chance to allow jumping
@@ -88,7 +88,6 @@ function GM:EndRound(virusWins)
 	GAMEMODE.EndRoundMusic = virusWins
 
 	-- reset round modifiers
-	GAMEMODE.zombiesWithGuns = false
 	GAMEMODE.playerGuns = {true, true, true, true}
 	GAMEMODE.zombieGuns = {false, false, false, false}
 	GAMEMODE.jumpable = false

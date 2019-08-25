@@ -25,19 +25,21 @@ local StartWeapon
 
 function GM:GetSelectedWeapons(ply)
 	table.Empty(weaponTable)
+	StartWeapon = table.Random(weapons[1])
 
-	table.insert(weaponTable, "weapon_adrenaline")
+	if not ply.IsVirus then
+		table.insert(weaponTable, "weapon_adrenaline")
+		table.insert(weaponTable, StartWeapon)
+	end
 
-	StartWeapon = table.Random(WeaponPistols)
-	table.insert(weaponTable, StartWeapon)
 	for i = 1, 4 do
 		if ply.IsVirus then
-			if GAMEMODE.virusWeapons[i] then
+			if GAMEMODE.virusGuns[i] then
 				local length = #weapons[i]
 				table.insert(weaponTable, weapons[i][math.random(1, length)])
 			end
 		else
-			if GAMEMODE.playerWeapons[i] then
+			if GAMEMODE.playerGuns[i] then
 				local length = #weapons[i]
 				table.insert(weaponTable, weapons[i][math.random(1, length)])
 			end
