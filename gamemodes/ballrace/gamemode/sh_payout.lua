@@ -44,7 +44,7 @@ for place = 1, #descriptions do
 		Name = "You're #" .. place,
 		Desc = descriptions[place],
 		Diff = 3,
-		GMC = 50 * place
+		GMC = 50 * (#descriptions - place - 1)
 	}
 end
 
