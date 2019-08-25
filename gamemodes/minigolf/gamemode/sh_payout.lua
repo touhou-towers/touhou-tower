@@ -1,41 +1,36 @@
------------------------------------------------------
-payout.Register(
-	"ThanksForPlaying",
-	{
-		Name = "Thanks For Playing",
-		Desc = "For participating in the game!",
+Payouts = {
+	ThanksForPlaying = {
+		Name = "Thanks for Playing",
+		Desc = "For participating!",
 		GMC = 25
-	}
-)
-
-payout.Register(
-	"HoleInOne",
-	{
-		Name = "Hole In One!",
-		Desc = "A perfect putt.",
-		GMC = 250
-	}
-)
-
-payout.Register(
-	"OverBogey",
-	{
+	},
+	HoleInOne = {
+		Name = "Hole in One",
+		Desc = "GOOOOOAAAAAAAAAL! Wait wrong sport..",
+		GMC = 500
+	},
+	OverBogey = {
 		Name = "Over Double Bogey",
-		Desc = "You do know the goal is to get\nthe lowest score, right?",
-		GMC = 20
+		Desc = "The higher the score the better... right?",
+		GMC = 50
 	}
-)
+}
+
+for k, v in pairs(Payouts) do
+	payout.Register(k, v)
+end
 
 local MoneyScores = {
 	[-4] = {250, "Way to soar!"},
 	[-3] = {200, "Really well done!"},
 	[-2] = {150, "Fly like an eagle."},
-	[-1] = {100, "Early bird gets the worm."},
-	[0] = {80, "Just average."},
-	[1] = {40, "Not bad. Try lowering your putt amounts."},
-	[2] = {30, "You can do better."}
+	[-1] = {125, "Early bird gets the worm."},
+	[0] = {100, "Just average."},
+	[1] = {80, "Not bad. Try lowering your putt amounts."},
+	[2] = {60, "You can do better."}
 }
 
+-- Scores is in the shared.lua file
 for k, score in pairs(MoneyScores) do
 	payout.Register(
 		Scores[k],
@@ -65,11 +60,9 @@ function GM:GiveMoney()
 			else
 				if MoneyScores[pardiff] then
 					payout.Give(ply, Scores[pardiff])
+				else
+					payout.Give(ply, "OverBogey")
 				end
-			end
-
-			if pardiff > 2 then
-				payout.Give(ply, "OverBogey")
 			end
 
 			payout.Payout(ply)
