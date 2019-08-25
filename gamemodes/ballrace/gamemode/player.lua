@@ -2,6 +2,22 @@ function GM:IsSpawnpointSuitable(pl, spawnpointent, bMakeSuitable)
 	return
 end
 
+local firstPlayerConnectedAt = 0
+local function shouldIStartGame()
+	if GetState() == STATUS_WAITING then
+		local now = CurTime()
+		if player.GetCount() >= GM.EXPECTED_PLAYER_COUNT or now - firstPlayerConnectedAt >= GAMEMODE.IntermissionTime then
+			-- unlike the other games, this isnt as important
+			-- to set but i'll do it anyways
+			GM.EXPECTED_PLAYER_COUNT = 0
+			SetTime(now)
+			GAMEMODE.StartRound(GAMEMODE) -- idk
+		else
+			timer.Simple(2, shouldIStartGame)
+		end
+	end
+end
+
 function GM:PlayerInitialSpawn(ply)
 	if ply:IsBot() then
 		return
@@ -12,13 +28,12 @@ function GM:PlayerInitialSpawn(ply)
 	net.Start("pick_ball")
 	net.Send(ply)
 
+	firstPlayerConnectedAt = CurTime()
 	-- if waiting and number of players is 1
 	if GetState() == STATUS_WAITING and #player.GetAll() == 1 then
 		game.CleanUpMap()
-		SetTime(CurTime() + GAMEMODE.IntermissionTime)
-
 		self:Announce("You are the first to join, waiting for additional players!")
-		timer.Simple(GAMEMODE.IntermissionTime, self.StartRound, self)
+		shouldIStartGame()
 	end
 end
 

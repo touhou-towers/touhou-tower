@@ -37,7 +37,12 @@ end
 
 function GM:Think()
 	if self:IsPracticing() then
-		if self:GetTimeLeft() <= 0 then
+		if self:GetTimeLeft() <= 0 or player.GetCount() >= GM.EXPECTED_PLAYER_COUNT then
+			-- only important on the first load, then we
+			-- dont care if someone hasnt loaded in
+			-- after the game starts
+			GM.EXPECTED_PLAYER_COUNT = 0
+
 			self:SetState(STATE_SETTINGS)
 			self:SetTime(12)
 

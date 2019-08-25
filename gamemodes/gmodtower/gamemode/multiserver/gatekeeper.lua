@@ -379,9 +379,14 @@ function gateKeep:GrabGoingToServer(ServerID)
 		local ips = GTowerServers:PlayerListToIDs(contents)
 
 		SQLLog("multiserver", "Authorized ips " .. table.concat(ips, ", "))
+
+		local totalPlayers = 0
 		for _, v in pairs(ips) do
 			MultiUsers[v] = true
+			totalPlayers = totalPlayers + 1
 		end
+		-- this is the spaghetti we need
+		GAMEMODE.EXPECTED_PLAYER_COUNT = totalPlayers
 
 		file.Delete(txt)
 

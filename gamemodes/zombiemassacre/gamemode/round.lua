@@ -21,39 +21,46 @@ function GM:Think()
 		end
 	end
 
-	if self:GetState() == STATE_WAITING and self:GetTimeLeft() <= 0 then
-		self.BossRound = false
-		self.BossSpawned = false
+	if self:GetState() == STATE_WAITING then
+		if self:GetTimeLeft() <= 0 or player.GetCount() >= GM.EXPECTED_PLAYER_COUNT then
+			-- only important on the first load, then we
+			-- dont care if someone hasnt loaded in
+			-- after the game starts
+			GM.EXPECTED_PLAYER_COUNT = 0
 
-		if self.GameStarted == true and not self.LostRound then
-			SetGlobalInt("Round", GetGlobalInt("Round") + 1)
-		end
+			self.BossRound = false
+			self.BossSpawned = false
 
-		if GetGlobalInt("Round") == 6 then
-			self.BossRound = true
-		end
+			if self.GameStarted == true and not self.LostRound then
+				SetGlobalInt("Round", GetGlobalInt("Round") + 1)
+			end
 
-		umsg.Start("ZMClassSelector")
-		umsg.Bool(true)
-		umsg.End()
+			if GetGlobalInt("Round") == 6 then
+				self.BossRound = true
+			end
 
-		umsg.Start("ZMPlayMusic")
-		umsg.Char(2)
-		umsg.End()
+			umsg.Start("ZMClassSelector")
+			umsg.Bool(true)
+			umsg.End()
 
-		for k, v in pairs(ents.FindByClass("zm_player_gravestone")) do
-			v:Remove()
-		end
+			umsg.Start("ZMPlayMusic")
+			umsg.Char(2)
+			umsg.End()
 
-		self:SetState(STATE_UPGRADING)
-		SetGlobalInt("ZMDayTime", CurTime() + 15)
+			for k, v in pairs(ents.FindByClass("zm_player_gravestone")) do
+				v:Remove()
+			end
 
-		for _, ply in ipairs(player.GetAll()) do
-			ply:SetFrags(0)
-			ply:SetDeaths(0)
-			ply:SetNWInt("Lives", 2)
-			ply:SetNWInt("Points", 0)
-			ply:StripAllInventory()
+			self:SetState(STATE_UPGRADING)
+			SetGlobalInt("ZMDayTime", CurTime() + 15)
+
+			for _, ply in ipairs(player.GetAll()) do
+				ply:SetFrags(0)
+				ply:SetDeaths(0)
+				ply:SetNWInt("Lives", 2)
+				ply:SetNWInt("Points", 0)
+				ply:StripAllInventory()
+			end
 		end
 	elseif self:GetState() == STATE_UPGRADING then
 		if self:GetTimeLeft() <= 0 or everyoneReady() then
