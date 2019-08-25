@@ -1,13 +1,13 @@
 -----------------------------------------------------
-local meta = FindMetaTable( "Player" )
+local meta = FindMetaTable("Player")
 
-if !meta then
+if not meta then
 	Msg("ALERT! Could not hook Player Meta Table\n")
 	return
 end
 
 function meta:GetGolfBall()
-	for _, ent in pairs( ents.FindByClass( "golfball" ) ) do
+	for _, ent in pairs(ents.FindByClass("golfball")) do
 		if ent.GetOwner and ent:GetOwner() == self then
 			return ent
 		end
@@ -15,15 +15,17 @@ function meta:GetGolfBall()
 end
 
 function meta:CanPutt()
-	if self:Team() == TEAM_FINISHED then return false end
-
-	local ball = self:GetGolfBall()
-
-	if !IsValid( ball ) then
+	if self:Team() == TEAM_FINISHED then
 		return false
 	end
 
-	return ball.IsReady && ball:IsReady()
+	local ball = self:GetGolfBall()
+
+	if not IsValid(ball) then
+		return false
+	end
+
+	return ball.IsReady and ball:IsReady()
 end
 
 function meta:IsPocketed()
@@ -31,16 +33,16 @@ function meta:IsPocketed()
 end
 
 function meta:GetBallColor()
-	return Vector( self:GetNWString( "BallColor" ) )
+	return Vector(self:GetNWString("BallColor"))
 end
 
-function meta:GetParDiff( swing )
+function meta:GetParDiff(swing)
 	return swing - GAMEMODE:GetPar()
 end
 
-function meta:GetSwingResult( swing )
-	local message = "BOGEY +" .. ( ( swing ) - GAMEMODE:GetPar() )
-	local pardiff = self:GetParDiff( swing )
+function meta:GetSwingResult(swing)
+	local message = "BOGEY +" .. ((swing) - GAMEMODE:GetPar())
+	local pardiff = self:GetParDiff(swing)
 
 	if Scores[pardiff] then
 		message = Scores[pardiff]
@@ -54,158 +56,165 @@ function meta:GetSwingResult( swing )
 end
 
 function meta:Swing()
-	return self:GetNWInt( "Swing" )
+	return self:GetNWInt("Swing")
 end
 
-function meta:SetSwing( swing )
-	self:SetNWInt( "Swing", swing )
+function meta:SetSwing(swing)
+	self:SetNWInt("Swing", swing)
 end
 
 if SERVER then
 	function meta:SetupForHole()
-		// Reset swing and pocketed
-		self:SetSwing( 0 )
-		self:SetTeam( TEAM_PLAYING )
-		self:SetCamera( "Playing", 1.0 )
+		-- Reset swing and pocketed
+		self:SetSwing(0)
+		self:SetTeam(TEAM_PLAYING)
+		self:SetCamera("Playing", 1.0)
 
-		// Move to hole
+		-- Move to hole
 		--[[GAMEMODE:MoveToHole( self )
 		umsg.Start( "SendHole", self )
 			umsg.Vector( GAMEMODE:GetCurrentHole():GetPos() )
 		umsg.End()]]
 	end
 
-	function meta:SetupBall( hole )
-		self:SetTeam( TEAM_PLAYING )
+	function meta:SetupBall(hole)
+		self:SetTeam(TEAM_PLAYING)
 
 		local spawn = self
 
 		if hole then
 			spawn = hole
-			--self:RemoveBall() // Clear out the old ball
+		--self:RemoveBall() // Clear out the old ball
 		end
 
-		local ball = ents.Create( "golfball" )
-		/*local off = ( self:EntIndex() - 1 ) % 6
-		ball:SetPos( spawn:GetPos() + Vector( 0, 10 * off, 10 ) )*/
-		ball:SetPos( spawn:GetPos() + Vector( 0, 0, 10 ) )
-		ball:SetOwner( self )
+		local ball = ents.Create("golfball")
+		ball:SetPos(spawn:GetPos() + Vector(0, 0, 10))
+		ball:SetOwner(self)
 		ball:Spawn()
 
 		local phys = ball:GetPhysicsObject()
-		if IsValid( phys ) then
-			phys:SetVelocity( self:GetVelocity() )
+		if IsValid(phys) then
+			phys:SetVelocity(self:GetVelocity())
 		end
 	end
 
 	function meta:SetupScores()
-		if !GAMEMODE.CurrentHoleNum || GAMEMODE.CurrentHoleNum <= 0 then return end
-		GAMEMODE:UpdateScore( self )
+		if not GAMEMODE.CurrentHoleNum or GAMEMODE.CurrentHoleNum <= 0 then
+			return
+		end
+		GAMEMODE:UpdateScore(self)
 	end
 
-	local swingSounds = { 125, 100, 50, 0 }
+	local swingSounds = {125, 100, 50, 0}
 
-	function meta:Putt( ball, power, vec )
-		if !self:CanPutt() then return end
-
-		// Override for practice round setup
-		if self:GetCamera() != "Playing" && GAMEMODE:IsPracticing() then
-			self:SetCamera( "Playing", 1.0 )
+	function meta:Putt(ball, power, vec)
+		if not self:CanPutt() then
 			return
 		end
 
-		if !ball then
+		-- Override for practice round setup
+		if self:GetCamera() ~= "Playing" and GAMEMODE:IsPracticing() then
+			self:SetCamera("Playing", 1.0)
+			return
+		end
+
+		if not ball then
 			ball = self:GetGolfBall()
 		end
 
-		// Play swing sound
-		for _, snd in ipairs( swingSounds ) do
+		-- Play swing sound
+		for _, snd in ipairs(swingSounds) do
 			if power >= snd then
-				ball:EmitSound( SOUND_SWING .. snd .. ".wav", 100, math.random( 80, 120 ) )
+				ball:EmitSound(SOUND_SWING .. snd .. ".wav", 100, math.random(80, 120))
 				break
 			end
 		end
 
-		// Effect
+		-- Effect
 		local edata = EffectData()
-		edata:SetOrigin( ball:GetPos() )
-		edata:SetStart( Vector( power, power, power ) )
-		edata:SetEntity( self )
-		util.Effect( "golfhit", edata, true, true )
+		edata:SetOrigin(ball:GetPos())
+		edata:SetStart(Vector(power, power, power))
+		edata:SetEntity(self)
+		util.Effect("golfhit", edata, true, true)
 
-		// sv_controls.lua
-		Putt( ball, vec )
+		-- sv_controls.lua
+		Putt(ball, vec)
 
-		// Increase swing
+		-- Increase swing
 		if GAMEMODE:IsPlaying() then
-			self:SetSwing( self:Swing() + 1 )
+			self:SetSwing(self:Swing() + 1)
 		end
 
-		// Undo AFK
+		-- Undo AFK
 		self.AfkTime = (CurTime() + AFKTime)
-
 	end
 
-	function meta:MessageSwing( swing )
-		GAMEMODE:HUDMessage( self, self:GetSwingResult(swing) )
+	function meta:MessageSwing(swing)
+		GAMEMODE:HUDMessage(self, self:GetSwingResult(swing))
 	end
 
-	function meta:AwardSwing( swing )
-		self:AddAchivement( ACHIVEMENTS.MINIMILESTONE1, 1 )
-		self:AddAchivement( ACHIVEMENTS.MINIGREENGREENS, 1 )
+	function meta:AwardSwing(swing)
+		self:AddAchivement(ACHIVEMENTS.MINIMILESTONE1, 1)
+		self:AddAchivement(ACHIVEMENTS.MINIGREENGREENS, 1)
 		--self:AddAchivement( ACHIVEMENTS.MINIMILESTONE1, 1 )
 
 		if swing == 1 then
-			self:SetAchivement( ACHIVEMENTS.MINIHOLEINONE, 1 )
-			self:AddAchivement( ACHIVEMENTS.MINIMASTERS, 1 )
+			self:SetAchivement(ACHIVEMENTS.MINIHOLEINONE, 1)
+			self:AddAchivement(ACHIVEMENTS.MINIMASTERS, 1)
 			return
 		end
 
-		local pardiff = self:GetParDiff( swing )
+		local pardiff = self:GetParDiff(swing)
 
 		if pardiff == -3 then
-			self:AddAchivement( ACHIVEMENTS.MINIALBATROSS, 1 )
+			self:AddAchivement(ACHIVEMENTS.MINIALBATROSS, 1)
 		end
 
 		if pardiff == -2 then
-			self:AddAchivement( ACHIVEMENTS.MINIEAGLES, 1 )
+			self:AddAchivement(ACHIVEMENTS.MINIEAGLES, 1)
 		end
 
 		if pardiff == -1 then
-			self:AddAchivement( ACHIVEMENTS.MINIBIRDIE, 1 )
+			self:AddAchivement(ACHIVEMENTS.MINIBIRDIE, 1)
 		end
 	end
 
-	function meta:AnnounceSwing( swing )
-		local pardiff = self:GetParDiff( swing )
+	function meta:AnnounceSwing(swing)
+		local pardiff = self:GetParDiff(swing)
 
-		// Announcer
-		if swing != 1 && pardiff < 1 then
-			timer.Simple( .15, function()
-				if IsValid( self ) then
-					GAMEMODE:PlaySound( SOUNDINDEX_ANNOUNCER, self )
-				end
-			end )
-		end
-
-		// Clapping
-		if swing == 1 then
-			GAMEMODE:PlaySound( SOUNDINDEX_CLAP, self, 3 )
-		else
-			timer.Simple( .5, function()
-				if IsValid( self ) then
-					if pardiff < 0 then
-						GAMEMODE:PlaySound( SOUNDINDEX_CLAP, self, 2 )
-					else
-						GAMEMODE:PlaySound( SOUNDINDEX_CLAP, self, 1 )
+		-- Announcer
+		if swing ~= 1 and pardiff < 1 then
+			timer.Simple(
+				.15,
+				function()
+					if IsValid(self) then
+						GAMEMODE:PlaySound(SOUNDINDEX_ANNOUNCER, self)
 					end
 				end
-			end )
+			)
+		end
+
+		-- Clapping
+		if swing == 1 then
+			GAMEMODE:PlaySound(SOUNDINDEX_CLAP, self, 3)
+		else
+			timer.Simple(
+				.5,
+				function()
+					if IsValid(self) then
+						if pardiff < 0 then
+							GAMEMODE:PlaySound(SOUNDINDEX_CLAP, self, 2)
+						else
+							GAMEMODE:PlaySound(SOUNDINDEX_CLAP, self, 1)
+						end
+					end
+				end
+			)
 		end
 	end
 
 	function meta:LateJoin()
-		if (GAMEMODE:GetState() == STATE_INTERMISSION && team.NumPlayers(TEAM_FINISHED) >= 1) then
+		if (GAMEMODE:GetState() == STATE_INTERMISSION and team.NumPlayers(TEAM_FINISHED) >= 1) then
 			self:SetTeam(TEAM_FINISHED)
 			self:SetSwing(15)
 		else
@@ -216,17 +225,17 @@ if SERVER then
 		local score = self:Swing()
 		local count = GAMEMODE:GetHole() - 1
 
-		for i=1,count do
-			local score = PenaltyScores(i)+3
-			GAMEMODE:SetScore( self, i, score )
+		for i = 1, count do
+			local score = PenaltyScores(i) + 3
+			GAMEMODE:SetScore(self, i, score)
 		end
 	end
 
-	function meta:AutoFail( message )
-		self:SetTeam( TEAM_FINISHED )
-		self:SetCamera( "Pocket", 1.0 )
+	function meta:AutoFail(message)
+		self:SetTeam(TEAM_FINISHED)
+		self:SetCamera("Pocket", 1.0)
 
-		GAMEMODE:HUDMessage( self, message )
+		GAMEMODE:HUDMessage(self, message)
 
 		local score = self:Swing()
 
@@ -234,93 +243,96 @@ if SERVER then
 			score = 15
 		end
 
-		GAMEMODE:SetScore( self, GAMEMODE:GetHole(), score )
+		GAMEMODE:SetScore(self, GAMEMODE:GetHole(), score)
 	end
 
 	function meta:Pocket()
-		if self:IsPocketed() then return end
+		if self:IsPocketed() then
+			return
+		end
 
 		local ball = self:GetGolfBall()
 
-		if IsValid( ball ) then
+		if IsValid(ball) then
 			ball:Pocket()
 		end
 
-		// End ball for playing round
+		-- End ball for playing round
 		if GAMEMODE:IsPlaying() then
-			self:SetTeam( TEAM_FINISHED )
+			self:SetTeam(TEAM_FINISHED)
 
-			self:SetCamera( "Pocket", 2.0 )
+			self:SetCamera("Pocket", 2.0)
 
-			// Set Score
-			GAMEMODE:SetScore( self, GAMEMODE:GetHole(), self:Swing() )
+			-- Set Score
+			GAMEMODE:SetScore(self, GAMEMODE:GetHole(), self:Swing())
 
-			self:MessageSwing( self:Swing() )
-			self:AnnounceSwing( self:Swing() )
-			self:AwardSwing( self:Swing() )
+			self:MessageSwing(self:Swing())
+			self:AnnounceSwing(self:Swing())
+			self:AwardSwing(self:Swing())
 		end
 
-		// Reset ball for practice round
+		-- Reset ball for practice round
 		if GAMEMODE:IsPracticing() then
-			timer.Simple( 1, function()
-				if IsValid( self ) then
-					self:SetBallPos(PracticeSpawn():GetPos())
-					ball:DropToFloor()
-					ball.IsPocketed = false
+			timer.Simple(
+				1,
+				function()
+					if IsValid(self) then
+						self:SetBallPos(PracticeSpawn():GetPos())
+						ball:DropToFloor()
+						ball.IsPocketed = false
+					end
 				end
-			end )
+			)
 		end
 
-
-
-		// Update hats
+		-- Update hats
 		if self.ActiveWearables then
-			Hats.RemoveHats( self )
+			Hats.RemoveHats(self)
 		end
 	end
 
-	function meta:OutOfBounds( lastsafe, message )
-		if !message then
+	function meta:OutOfBounds(lastsafe, message)
+		if not message then
 			message = "OUT OF BOUNDS"
 		end
 
-		self:SetBallPos( lastsafe )
+		self:SetBallPos(lastsafe)
 
-		if !GAMEMODE:IsPracticing() then
-			GAMEMODE:HUDMessage( self, message )
-			GAMEMODE:HUDMessage( self, "+1 PENALTY" )
+		if not GAMEMODE:IsPracticing() then
+			GAMEMODE:HUDMessage(self, message)
+			GAMEMODE:HUDMessage(self, "+1 PENALTY")
 		end
 
-		// Increase swing
+		-- Increase swing
 		if GAMEMODE:IsPlaying() then
-			self:SetSwing( self:Swing() + 1 )
+			self:SetSwing(self:Swing() + 1)
 		end
 	end
 
-	function meta:RemoveBall( time )
+	function meta:RemoveBall(time)
 		local ball = self:GetGolfBall()
-		if IsValid( ball ) then
+		if IsValid(ball) then
 			if ball.RemoveOn then
-				ball:RemoveOn( time )
+				ball:RemoveOn(time)
 			else
 				ball:Remove()
 			end
 		end
 	end
 
-	function meta:SetBallPos( pos )
-		if !pos then
+	function meta:SetBallPos(pos)
+		if not pos then
 			self:GetGolfBall():SetPos(CurrentHole)
 			return
 		end
 
 		local ball = self:GetGolfBall()
 
-		if IsValid( ball ) then
-			ball:SetVelocity( Vector( 0, 0, 0 ) )
-			ball:SetPos( pos )
+		if IsValid(ball) then
+			ball:SetVelocity(Vector(0, 0, 0))
+			ball:SetPos(pos)
 			ball.IsPocketed = false
-			ball:EnableMotion( false )
+			ball:EnableMotion(false)
 		end
 	end
 
@@ -329,13 +341,12 @@ if SERVER then
 		self:SetRunSpeed(200)
 		self:SetCanWalk(false)
 	end
-else // CLIENT
-
+else -- CLIENT
 	function meta:SpectateNext()
 		local players = player.GetAll()
 		local start = nil
 
-		if !self.Spectating then
+		if not self.Spectating then
 			self.Spectating = LocalPlayer()
 		end
 
@@ -349,24 +360,28 @@ else // CLIENT
 		local newspec = start
 		local k, v = next(players, start)
 
-		if !k then k, v = next(players) end
+		if not k then
+			k, v = next(players)
+		end
 
-		while k != start do
+		while k ~= start do
 			if v:Team() == TEAM_PLAYING then
 				newspec = k
 				break
 			end
 
 			k, v = next(players, k)
-			if !k then
-				if start == nil then break end
+			if not k then
+				if start == nil then
+					break
+				end
 				k, v = next(players)
 			end
 		end
 
 		local ply = nil
 
-		if newspec && players[newspec] then
+		if newspec and players[newspec] then
 			ply = players[newspec]
 		end
 
