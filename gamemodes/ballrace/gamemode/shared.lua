@@ -36,6 +36,9 @@ LivesTriesOverride = {
 	},
 	gmt_ballracer_tranquil = {
 		Time = 70
+	},
+	gmt_ballracer_sandworld02 = {
+		Time = 70
 	}
 }
 LivesTriesOverride.gmt_vallracer_midorib5 = LivesTriesOverride.gmt_ballracer_midori
