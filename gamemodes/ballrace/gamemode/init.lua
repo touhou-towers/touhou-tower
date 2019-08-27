@@ -31,9 +31,6 @@ function GM:Initialize()
 	GAMEMODE.RoundNum = 0
 
 	SetGlobalInt("Attempts", 0)
-
-	-- TODO: update this
-	RunConsoleCommand("sv_loadingurl", "http://gmodtower.org/loading/?mapname=%m&steamid=%s")
 end
 
 hook.Add(

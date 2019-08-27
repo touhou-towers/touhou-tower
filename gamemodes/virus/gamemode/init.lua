@@ -59,8 +59,6 @@ function GM:Initialize()
 	game.GetWorld().SetTime = self.WaitingTime
 
 	local map = game.GetMap()
-
-	RunConsoleCommand("sv_loadingurl", "http://gmodtower.org/loading/?mapname=%m&steamid=%s")
 end
 
 function GM:InitPostEntity()

@@ -19,13 +19,13 @@ function PANEL:Init()
 	Categories:SetPos( 0, 0 )
 	Categories:SetSize( self:GetParent():GetWide(), ScrH() * 0.60 )
 	
-	local website = "http://www.gmtower.org/"
+	local website = "https://touhou-towers.github.io/"
 
-	self:AddURLTab( "Latest News", website .. "index.php?p=news&app=1" )
-	self:AddURLTab( "Change Log", website .. "index.php?p=changelog&app=1" )
-	self:AddURLTab( "FAQs", website .. "index.php?p=faqs&app=1" )
-	self:AddURLTab( "Stats", website .. "index.php?p=stats&app=1" )
-	self:AddURLTab( "GMT Staff", website .. "index.php?p=staff&app=1" )
+	-- self:AddURLTab( "Latest News", website .. "index.php?p=news&app=1" )
+	-- self:AddURLTab( "Change Log", website .. "index.php?p=changelog&app=1" )
+	-- self:AddURLTab( "FAQs", website .. "index.php?p=faqs&app=1" )
+	-- self:AddURLTab( "Stats", website .. "index.php?p=stats&app=1" )
+	-- self:AddURLTab( "GMT Staff", website .. "index.php?p=staff&app=1" )
 	
 end
 

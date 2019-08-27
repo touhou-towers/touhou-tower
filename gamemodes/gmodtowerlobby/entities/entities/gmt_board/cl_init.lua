@@ -127,15 +127,23 @@ function ENT:DrawMain()
 				"Welcome to Touhou Towers",
 				"SmallHeaderFont",
 				30,
+				235,
+				Color(255, 255, 255),
+				TEXT_ALIGN_LEFT
+			)
+			draw.SimpleText(
+				"Visit the website at https://touhou-towers.github.io",
+				"SmallHeaderFont",
+				30,
 				300,
 				Color(255, 255, 255),
 				TEXT_ALIGN_LEFT
 			)
 			draw.SimpleText(
-				"Join our discord at https://discordapp.com/invite/fryPWwR",
+				"You can press E top open it",
 				"SmallHeaderFont",
 				30,
-				300,
+				365,
 				Color(255, 255, 255),
 				TEXT_ALIGN_LEFT
 			)
@@ -266,12 +274,12 @@ net.Receive(
 usermessage.Hook(
 	"OpenDonation",
 	function(um)
-		local URL = "http://www.gmtower.org/index.php?p=donations&app=1&hide=1&si=" .. LocalPlayer():SteamID()
-		local Title = "Donate"
+		local URL = "https://touhou-towers.github.io/"
+		local Title = "Touhou Towers"
 
 		if LocalPlayer().IsVIP and LocalPlayer():IsVIP() then
-			URL = "http://www.gmtower.org/forums/index.php?board=14.0"
-			Title = "VIP Forums"
+			URL = "https://touhou-towers.github.io/"
+			Title = "Touhou Towers"
 		end
 
 		browser.OpenURL(URL, Title)
