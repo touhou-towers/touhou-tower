@@ -356,7 +356,7 @@ hook.Add(
 function GM:Initialize()
 	RunConsoleCommand(
 		"sv_loadingurl",
-		"https://cdn.discordapp.com/attachments/614898416321036329/614900786308317184/unknown.png"
+		"https://touhou-towers.github.io/loading#%m-%s"
 	)
 end
 

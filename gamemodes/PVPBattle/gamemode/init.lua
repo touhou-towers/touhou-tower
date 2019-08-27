@@ -30,8 +30,6 @@ GM.GiveAllWeapons = false
 GM.Weapons = {}
 
 function GM:Initialize()
-    --SetIfDefault( "sv_loadingurl", LOADING_URL ) Let's force it instead
-		RunConsoleCommand( "sv_loadingurl", "http://gmodtower.org/loading/?mapname=%m&steamid=%s" )
 end
 
 hook.Add("PlayerInitialSpawn", "ResetOnEmptyServer", function( ply )
