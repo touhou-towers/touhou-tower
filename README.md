@@ -23,19 +23,20 @@ Steps:
     1. Copy this repository's `addons/mediaplayer` folder into the `addons` folder
     2. Create two folders with any name (e.g. `gmtower` and `gmtowerassets`) in the `addons` folder
         - one will house this repository's contents and one will house the original GMT assets.
-    3. Copy this repository's `addons/mediaplayer` folder into the `addons` folder
-    4. Copy this repository's `gamemodes` contents into one of the addon folders
-    5. Create a [`gmodtower.txt`](https://wiki.facepunch.com/gmod/Gamemode_Creation#gamemodetextfile) file in the gamemodes folder.
+    3. Copy this repository's `gamemodes` contents into one of the addon folders
+    4. Create a [`gmodtower.txt`](https://wiki.facepunch.com/gmod/Gamemode_Creation#gamemodetextfile) file in the gamemodes folder.
         - I think you need to match it with the folder name, and the minimum content is `"gmodtower"{}`
         - Why isn't this in the repository already?
-    6. Copy the original GMT assets into the other addon folder
+    5. Copy the original GMT assets into the other addon folder
     - We should end up with a folder structure like this:
 ```
 garrysmod/
 └── addons/
     ├── gmtower/
     │   └── gamemodes/
-    |       ├── gmodtower.txt
+    |       ├── gmodtower/
+    |       |   ├── gmodtower.txt
+    |       |   └── .../
     |       └── .../
     ├── gmtowerassets/
     │   ├── gamemodes/
